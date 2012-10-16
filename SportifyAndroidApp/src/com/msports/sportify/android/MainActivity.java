@@ -1,14 +1,25 @@
 package com.msports.sportify.android;
 
 
+import java.util.Date;
+
+import com.msports.sportify.android.model.PedometerModel;
+import com.msports.sportify.preferences.PedometerSettings;
+
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +37,13 @@ public class MainActivity extends FragmentActivity {
      * to switch to a {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     SectionsPagerAdapter mSectionsPagerAdapter;
+    
+    public static final String PREFS_NAME = "PedPref";
+    
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private PedometerSettings mPedometerSettings;
+    private PedometerModel m_model;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -39,12 +57,28 @@ public class MainActivity extends FragmentActivity {
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
+        
+        //load preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        int totalSteps = settings.getInt("totalSteps", 0);
+        long prevOpening = settings.getLong("prevOpening", new Date().getTime());
+        
+        //check if the app is opened the first time of this day
+        CharSequence s = DateFormat.format("EEEE, MMMM d, yyyy ", prevOpening);
+        CharSequence s2 = DateFormat.format("EEEE, MMMM d, yyyy ", new Date().getTime());
+        
+        boolean firstOpeningToday = !s.equals(s2);
+        int stepsToday = settings.getInt("stepsToday", 0);
+        
+        //load the user defined settings
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
+        mPedometerSettings = new PedometerSettings(settings);
+        
+        m_model = new PedometerModel(totalSteps, firstOpeningToday, stepsToday);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
     }
 
     @Override
@@ -52,9 +86,6 @@ public class MainActivity extends FragmentActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
-    
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
@@ -70,6 +101,9 @@ public class MainActivity extends FragmentActivity {
         public Fragment getItem(int i) {
         	if(i == 0) {
         		UploadFragment fragm = new UploadFragment();
+        		return fragm;
+        	} else if (i == 1) {
+        		PedometerFragment fragm = new PedometerFragment(m_model);
         		return fragm;
         	}
         	
@@ -95,6 +129,26 @@ public class MainActivity extends FragmentActivity {
             return null;
         }
     }
+    
+    /* Creates the menu items */
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+      
+        menu.add(0, 8, 0, "Settings")
+        .setIntent(new Intent(this, com.msports.sportify.preferences.Settings.class));
+        return true;
+    }
+    
+    @Override
+	protected void onDestroy() {
+		super.onDestroy();
+		savePreferences();		
+	}
+	
+	public void savePreferences() {
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		m_model.savePreferences(settings);
+	}	
 
     /**
      * A dummy fragment representing a section of the app, but that simply displays dummy text.

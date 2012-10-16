@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+            android:title="@string/steps_settings_title">
+
+        <com.msports.sportify.preferences.StepLengthPreference
+                android:key="step_length"
+                android:title="@string/step_length_setting"
+                android:summary="@string/step_length_setting_details"
+                android:dialogTitle="@string/step_length_setting_title"
+                android:defaultValue="20" />
+            
+        <com.msports.sportify.preferences.BodyWeightPreference
+                android:key="body_weight"
+                android:title="@string/body_weight_setting"
+                android:summary="@string/body_weight_setting_details"
+                android:dialogTitle="@string/body_weight_setting_title"
+                android:defaultValue="50" />
+
+    </PreferenceCategory>
+
+
+    
+</PreferenceScreen>
