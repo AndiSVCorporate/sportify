@@ -1,11 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">SportifyAndroidApp</string>
     <string name="title_section3">Section 3</string>
-    <string name="title_section2">Section 2</string>
+    <string name="title_section2">Pedometer</string>
     <string name="title_section1">Section Upload</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">MainActivity</string><string name="step_length_setting">Step length</string><string name="step_length_setting_details">For distance, speed &amp; calorie calculation</string><string name="body_weight_setting">Body weight</string><string name="body_weight_setting_details">For calorie calculation</string><string name="centimeters">centimeters</string><string name="inches">inches</string><string name="kilograms">kilograms</string><string name="pounds">pounds</string><string name="body_weight_setting_title">Enter your body weight</string><string name="steps_settings_title">Basic Settings</string><string name="step_length_setting_title">Enter your step length</string>
 
 </resources>
