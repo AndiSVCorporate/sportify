@@ -2,6 +2,15 @@
 
   <!-- Servlets -->
   <servlet>
+        <servlet-name>storeSessionServlet</servlet-name>
+        <servlet-class>com.msports.sportify.server.StoreSessionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>storeSessionServlet</servlet-name>
+        <url-pattern>/storeSession</url-pattern>
+    </servlet-mapping>
+  
+  <servlet>
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>com.msports.sportify.server.GreetingServiceImpl</servlet-class>
   </servlet>
