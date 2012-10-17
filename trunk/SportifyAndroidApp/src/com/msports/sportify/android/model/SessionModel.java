@@ -8,6 +8,9 @@ public class SessionModel {
 	private int currentPercentageOfMaxHeartRate;
 	private int currentHeartRate;
 	
+	private float distance; 
+	private float speed;
+	
 	private int trimpScore;
 
 	public SessionModel() {
@@ -70,6 +73,22 @@ public class SessionModel {
 
 	public void setTrimpScore(int trimpScore) {
 		this.trimpScore = trimpScore;
+	}
+
+	public float getDistance() {
+		return distance;
+	}
+
+	public void setDistance(float distance) {
+		this.distance = distance;
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
 	}
 	
 	
