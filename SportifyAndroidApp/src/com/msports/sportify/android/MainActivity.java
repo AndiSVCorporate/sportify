@@ -105,6 +105,9 @@ public class MainActivity extends FragmentActivity {
         	} else if (i == 1) {
         		PedometerFragment fragm = new PedometerFragment(m_model);
         		return fragm;
+        	} else if (i == 2) {
+        		SessionFragment fragm = new SessionFragment();
+        		return fragm;
         	}
         	
             Fragment fragment = new DummySectionFragment();
