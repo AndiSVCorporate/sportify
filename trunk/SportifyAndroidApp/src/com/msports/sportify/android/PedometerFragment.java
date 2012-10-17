@@ -17,11 +17,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.msports.sportify.android.model.PedometerModel;
+import com.msports.sportify.android.sensors.SensorFactoryManager;
 import com.msports.sportify.android.sensors.speed.SpeedSensor;
-import com.msports.sportify.android.sensors.steps.StepDetector;
+import com.msports.sportify.android.sensors.steps.StepListener;
+import com.msports.sportify.android.sensors.steps.StepSensor;
 import com.msports.sportify.preferences.PedometerSettings;
 
-public class PedometerFragment extends Fragment {
+public class PedometerFragment extends Fragment implements StepListener{
 
 	private View v;
 	
@@ -33,11 +35,11 @@ public class PedometerFragment extends Fragment {
 	private TextView m_maxStepsPerDayView;
 	private TextView m_minStepsPerDayView;
 	
-	private StepDetector m_stepDetector;
+	private StepSensor m_stepDetector;
 	private SpeedSensor m_speedSensor;
 	
 	public PedometerFragment(PedometerModel _model) {
-		m_model = _model;
+		m_model = _model;	
 	}
 	
 	@Override
@@ -57,10 +59,9 @@ public class PedometerFragment extends Fragment {
     	m_maxStepsPerDayView = (TextView)view.findViewById(R.id.maxstepsperdayview);
     	m_minStepsPerDayView = (TextView)view.findViewById(R.id.minstepsperdayview);
         
-        m_stepDetector = new StepDetector();
-        //m_stepDetector.setStepListener(this);
-        
         setCurrentValues();        
+        
+    	SensorFactoryManager.getInstance(getActivity()).registerStepListener(this);
         
 		return view;
 	}
@@ -77,15 +78,5 @@ public class PedometerFragment extends Fragment {
 		setCurrentValues();
 	}
 
-	public void onAccuracyChanged(Sensor arg0, int arg1) {
-	}
 	
-	public void onSensorChanged(SensorEvent event) {
-		Sensor sensor = event.sensor;
-		synchronized (this) {
-			if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-				m_stepDetector.onSensorChanged(event.values);
-			}
-		}
-	}
 }
