@@ -4,6 +4,8 @@ package com.msports.sportify.android;
 import java.util.Date;
 
 import com.msports.sportify.android.model.PedometerModel;
+import com.msports.sportify.android.model.SessionModel;
+import com.msports.sportify.android.session.SessionManager;
 import com.msports.sportify.preferences.PedometerSettings;
 
 import android.content.Context;
@@ -46,6 +48,12 @@ public class MainActivity extends FragmentActivity {
     private Sensor mAccelerometer;
     private PedometerSettings mPedometerSettings;
     private PedometerModel m_model;
+    
+    private SessionManager sessionManager;
+    
+    private UploadFragment uploadFragment;
+    private SessionFragment sessionFragment;
+    private PedometerFragment pedometerFragment;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -84,6 +92,9 @@ public class MainActivity extends FragmentActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        
+        sessionManager = new SessionManager(this);        
+        
     }
 
     @Override
@@ -105,21 +116,23 @@ public class MainActivity extends FragmentActivity {
         @Override
         public Fragment getItem(int i) {
         	if(i == 0) {
-        		UploadFragment fragm = new UploadFragment();
-        		return fragm;
+        		if(uploadFragment == null) {
+        			uploadFragment = new UploadFragment();
+        		}
+        		return uploadFragment;
         	} else if (i == 1) {
-        		PedometerFragment fragm = new PedometerFragment(m_model);
-        		return fragm;
+        		if(pedometerFragment == null) {
+        			pedometerFragment = new PedometerFragment(m_model);
+        		}
+        		return pedometerFragment;
         	} else if (i == 2) {
-        		SessionFragment fragm = new SessionFragment();
-        		return fragm;
+        		if(sessionFragment == null) {
+        			sessionFragment = new SessionFragment(MainActivity.this);
+        		}
+        		return sessionFragment;
+        	}  else {
+        		return null;
         	}
-        	
-            Fragment fragment = new DummySectionFragment();
-            Bundle args = new Bundle();
-            args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
-            fragment.setArguments(args);
-            return fragment;
         }
 
         @Override
@@ -156,7 +169,13 @@ public class MainActivity extends FragmentActivity {
 	public void savePreferences() {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		m_model.savePreferences(settings);
-	}	
+	}
+	
+	public void updateViews(SessionModel model) {
+		if(sessionFragment != null) {
+			sessionFragment.updateView(model);			
+		}
+	}
 
     /**
      * A dummy fragment representing a section of the app, but that simply displays dummy text.
