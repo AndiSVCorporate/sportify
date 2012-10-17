@@ -115,7 +115,7 @@
 	android:textStyle="bold"
 	android:textColor="@color/black"
 	android:gravity="center"
-	android:layout_above="@+id/widget50"
+	android:layout_above="@+id/distancelabel"
 	android:layout_alignParentRight="true" />
 <TextView
 	android:id="@+id/distancelabel"
@@ -175,28 +175,24 @@
 	android:id="@+id/widget55"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:background="@color/lightgray"
 	android:layout_alignParentBottom="true"
 	android:layout_alignParentLeft="true">
 <Button
 	android:id="@+id/widget56"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
 	android:text="Start"
 	android:textSize="18sp"
 	android:textStyle="bold"
 	android:textColor="@color/black"
-	android:layout_centerVertical="true"
-	android:layout_alignParentLeft="true" />
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content" />
 <Button
 	android:id="@+id/widget56"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
 	android:text="Stop"
 	android:textSize="18sp"
 	android:textStyle="bold"
 	android:textColor="@color/black"
-	android:layout_centerVertical="true"
-	android:layout_alignParentRight="true" />
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:visibility="invisible" />
 </RelativeLayout>
 </RelativeLayout>
