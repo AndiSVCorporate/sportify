@@ -10,6 +10,15 @@
         <url-pattern>/storeSession</url-pattern>
     </servlet-mapping>
   
+   <servlet>
+        <servlet-name>storeDailyStepsServlet</servlet-name>
+        <servlet-class>com.msports.sportify.server.StoreDailyStepsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>storeDailyStepsServlet</servlet-name>
+        <url-pattern>/storeDailySteps</url-pattern>
+    </servlet-mapping>
+    
   <servlet>
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>com.msports.sportify.server.GreetingServiceImpl</servlet-class>
