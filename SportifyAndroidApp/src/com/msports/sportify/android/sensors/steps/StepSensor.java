@@ -1,11 +1,18 @@
 package com.msports.sportify.android.sensors.steps;
 
+import android.app.Activity;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
 import com.msports.sportify.android.sensors.speed.SpeedListener;
 
 /**
  * Detects a step
  */
-public class StepDetector
+public class StepSensor implements SensorEventListener 
 {
     private final static float   DEFAULT_DIFF_LIMIT = 3; //default sensitivity
     private float   m_PrevValue;
@@ -15,18 +22,29 @@ public class StepDetector
     private int     m_PrevMatch = -1;
     
     private StepListener mStepListener;
-    private SpeedListener mSpeedListener;
     
-    public StepDetector() {
+    private SensorManager sensorManager;
+	private Sensor accelerometer;
+    
+    public StepSensor(Context context) {
+    	sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+    	accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    	sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
     
     public void setStepListener(StepListener _stepListener) {
         mStepListener = _stepListener;
-    }
+    }  
     
-    public void setSpeedListener(SpeedListener _speedListener) {
-        mSpeedListener = _speedListener;
-    }
+    @Override
+	public void onSensorChanged(SensorEvent event) {
+		Sensor sensor = event.sensor;
+		synchronized (this) {
+			if(sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+				onSensorChanged(event.values);
+			}
+		}
+	}
     
 	public void onSensorChanged(float[] eventValues) {
 		float actValue = (float)Math.sqrt(Math.pow(eventValues[0], 2)+Math.pow(eventValues[1], 2)+Math.pow(eventValues[2], 2));
@@ -68,4 +86,10 @@ public class StepDetector
 		m_PrevDirection = direction;
 		m_PrevValue = actValue;
 	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+		
+	}	
 }
