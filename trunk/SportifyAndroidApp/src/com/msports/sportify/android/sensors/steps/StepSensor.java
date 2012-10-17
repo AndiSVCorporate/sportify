@@ -14,6 +14,8 @@ import android.util.Log;
  */
 public class StepSensor implements SensorEventListener 
 {
+	private Context mContext;
+	
 	//step detection variables
 	private float   mLimit = 1.97f;
     private float   mLastValues[] = new float[3*2];
@@ -32,14 +34,13 @@ public class StepSensor implements SensorEventListener
 	
 	//speed calculation variables
 	private long timestampPrevStep = 0;
-	private float stepLength; //m
     
     public StepSensor(Context context) {
+    	mContext = context;
+    	
     	sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     	accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     	sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-    	PedometerSettings settings = new PedometerSettings(context);
-    	stepLength = settings.getStepLength()/100;
     	m_stepData = new StepData();
     	
     	int h = 480; // TODO: remove this constant
@@ -111,13 +112,17 @@ public class StepSensor implements SensorEventListener
 		}
 		float diff = currentTimeMillis-timestampPrevStep;
 		float timeHours = diff / 1000 / 3600;
-		float speed = stepLength/1000 / timeHours; //in km/h
+		float stepLengthMeter = new PedometerSettings(mContext).getStepLength() / 100;
+		float speed = stepLengthMeter/1000 / timeHours; //in km/h
 		timestampPrevStep = currentTimeMillis;
+		
+		speed = (int)(speed*100)/100.0f;
 		
 		m_stepData.setM_speed(speed);
 	}
 	
 	public void calculateDistance() {
-		m_stepData.setM_distance(m_stepData.getM_distance()+stepLength);
+		float stepLengthMeter = new PedometerSettings(mContext).getStepLength() / 100;
+		m_stepData.setM_distance(m_stepData.getM_distance()+stepLengthMeter);
 	}
 }

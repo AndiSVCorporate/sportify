@@ -11,7 +11,7 @@
                 android:title="@string/step_length_setting"
                 android:summary="@string/step_length_setting_details"
                 android:dialogTitle="@string/step_length_setting_title"
-                android:defaultValue="20" />
+                android:defaultValue="50" />
             
         <com.msports.sportify.preferences.BodyWeightPreference
                 android:key="body_weight"
@@ -19,9 +19,28 @@
                 android:summary="@string/body_weight_setting_details"
                 android:dialogTitle="@string/body_weight_setting_title"
                 android:defaultValue="50" />
+        
+        <com.msports.sportify.preferences.AgePreference
+                android:key="age"
+                android:title="@string/age_setting"
+                android:summary="@string/age_setting_details"
+                android:dialogTitle="@string/age_setting_title"
+                android:defaultValue="25" />
+        
+        <com.msports.sportify.preferences.GenderPreference
+                android:key="gender"
+                android:title="@string/gender_setting"
+                android:summary="@string/gender_setting_details"
+                android:dialogTitle="@string/gender_setting_title"
+                android:defaultValue="1" />
+        
+        <com.msports.sportify.preferences.VolumeOxygenMaxPreference
+                android:key="vomax"
+                android:title="@string/vomax_setting"
+                android:summary="@string/vomax_setting_details"
+                android:dialogTitle="@string/vomax_setting_title"
+                android:defaultValue="50" />
 
     </PreferenceCategory>
-
-
     
 </PreferenceScreen>
