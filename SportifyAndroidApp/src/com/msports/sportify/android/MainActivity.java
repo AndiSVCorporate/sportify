@@ -9,6 +9,7 @@ import com.msports.sportify.preferences.PedometerSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity {
@@ -54,6 +56,10 @@ public class MainActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -71,8 +77,7 @@ public class MainActivity extends FragmentActivity {
         int stepsToday = settings.getInt("stepsToday", 0);
         
         //load the user defined settings
-        settings = PreferenceManager.getDefaultSharedPreferences(this);
-        mPedometerSettings = new PedometerSettings(settings);
+        mPedometerSettings = new PedometerSettings(this);
         
         m_model = new PedometerModel(totalSteps, firstOpeningToday, stepsToday);
 

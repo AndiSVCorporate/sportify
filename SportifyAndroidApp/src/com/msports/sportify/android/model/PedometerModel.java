@@ -10,6 +10,7 @@ public class PedometerModel {
 	private int m_stepsToday;
 	private int m_stepsToGo;
 	private int m_totalSteps;
+	private float m_stepLength;
 	
 	public PedometerModel(int _totalSteps, boolean _firstOpenedToday, int _stepsToday) {
 		if (_firstOpenedToday) {

@@ -19,11 +19,12 @@ import android.widget.TextView;
 import com.msports.sportify.android.model.PedometerModel;
 import com.msports.sportify.android.sensors.SensorFactoryManager;
 import com.msports.sportify.android.sensors.speed.SpeedSensor;
+import com.msports.sportify.android.sensors.steps.StepData;
 import com.msports.sportify.android.sensors.steps.StepListener;
 import com.msports.sportify.android.sensors.steps.StepSensor;
 import com.msports.sportify.preferences.PedometerSettings;
 
-public class PedometerFragment extends Fragment implements StepListener{
+public class PedometerFragment extends Fragment implements StepListener {
 
 	private View v;
 	
@@ -72,7 +73,7 @@ public class PedometerFragment extends Fragment implements StepListener{
 		m_stepsTodayView.setText(m_model.getStepsToday());
 	}
 
-	public void onStep() {
+	public void onUpdateStepSensor(StepData _stepData) {
 		Log.i("pedometer", "step done");
 		m_model.incrementStep();
 		setCurrentValues();
