@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AbsoluteLayout
+<RelativeLayout
 	android:id="@+id/lowestabsolutepage1"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
+	android:padding="10dp"
 	xmlns:android="http://schemas.android.com/apk/res/android">
-<TextView
-	android:id="@+id/widget34"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:text="steps to go for today"
-	android:layout_x="192dp"
-	android:layout_y="138dp" />
+
 <TextView
 	android:id="@+id/stepstogoview"
 	android:layout_width="wrap_content"
@@ -18,15 +13,25 @@
 	android:text="3400"
 	android:textSize="100sp"
 	android:textColor="@color/black"
-	android:layout_x="82dp"
-	android:layout_y="23dp" />
+	android:layout_centerHorizontal="true"
+	android:layout_alignParentTop="true" />
+
+<TextView
+	android:id="@+id/widget34"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:text="steps to go for today"
+	android:layout_below="@id/stepstogoview"
+	android:layout_alignParentRight="true"
+	android:layout_margin="20dp"/>
+
 <RelativeLayout
 	android:id="@+id/widget40"
 	android:layout_width="130dp"
 	android:layout_height="75dp"
 	android:background="@color/lightgray"
-	android:layout_x="18dp"
-	android:layout_y="194dp">
+	android:layout_below="@id/widget34"
+	android:layout_alignParentLeft="true" >
 <TextView
 	android:id="@+id/totalstepsview"
 	android:layout_width="70dp"
@@ -58,11 +63,11 @@
 </RelativeLayout>
 <RelativeLayout
 	android:id="@+id/widget43"
-	android:layout_width="134dp"
+	android:layout_width="130dp"
 	android:layout_height="75dp"
 	android:background="@color/lightgray"
-	android:layout_x="166dp"
-	android:layout_y="194dp">
+	android:layout_alignParentRight="true"
+	android:layout_alignBottom="@id/widget40">
 <TextView
 	android:id="@+id/stepstodaylabel"
 	android:layout_width="wrap_content"
@@ -96,9 +101,10 @@
 	android:id="@+id/widget47"
 	android:layout_width="130dp"
 	android:layout_height="75dp"
+	android:layout_marginTop="10dp"
 	android:background="@color/lightgray"
-	android:layout_x="19dp"
-	android:layout_y="284dp">
+	android:layout_alignParentRight="true"
+	android:layout_below="@id/widget43">
 <TextView
 	android:id="@+id/maxstepsperdayview"
 	android:layout_width="70dp"
@@ -130,11 +136,12 @@
 </RelativeLayout>
 <RelativeLayout
 	android:id="@+id/widget51"
-	android:layout_width="135dp"
+	android:layout_width="130dp"
 	android:layout_height="75dp"
 	android:background="@color/lightgray"
-	android:layout_x="167dp"
-	android:layout_y="285dp">
+	android:layout_below="@id/widget40"
+	android:layout_marginTop="10dp"
+	android:layout_alignParentLeft="true">
 <TextView
 	android:id="@+id/minstepsperdayview"
 	android:layout_width="70dp"
@@ -166,28 +173,20 @@
 </RelativeLayout>
 <RelativeLayout
 	android:id="@+id/widget55"
-	android:layout_width="285dp"
-	android:layout_height="36dp"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
 	android:background="@color/lightgray"
-	android:layout_x="17dp"
-	android:layout_y="381dp">
-<TextView
+	android:layout_alignParentBottom="true"
+	android:layout_alignParentLeft="true">
+<Button
 	android:id="@+id/widget56"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:text="25 &#176;C"
+	android:text="Upload to server"
 	android:textSize="18sp"
 	android:textStyle="bold"
 	android:textColor="@color/black"
 	android:layout_centerVertical="true"
-	android:layout_alignParentLeft="true" />
-<ImageView
-	android:id="@+id/widget52"
-	android:src="@drawable/sunny"
-	android:scaleType="fitCenter"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:layout_centerVertical="true"
-	android:layout_alignParentRight="true" />
+	android:layout_centerHorizontal="true" />
 </RelativeLayout>
-</AbsoluteLayout>
+</RelativeLayout>
