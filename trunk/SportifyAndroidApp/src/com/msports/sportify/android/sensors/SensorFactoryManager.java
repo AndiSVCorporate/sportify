@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import android.content.Context;
 
+import com.msports.sportify.android.sensors.steps.StepData;
 import com.msports.sportify.android.sensors.steps.StepListener;
 import com.msports.sportify.android.sensors.steps.StepSensor;
 
@@ -37,9 +38,9 @@ public class SensorFactoryManager implements StepListener{
 	}
 
 	@Override
-	public void onStep() {
+	public void onUpdateStepSensor(StepData _stepData) {
 		for(StepListener listener: stepListeners) {
-			listener.onStep();
+			listener.onUpdateStepSensor(_stepData);
 		}
 	}
 	

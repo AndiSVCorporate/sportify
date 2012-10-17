@@ -1,35 +1,51 @@
 package com.msports.sportify.android.sensors.steps;
 
-import android.app.Activity;
+import com.msports.sportify.preferences.PedometerSettings;
+
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-
-import com.msports.sportify.android.sensors.speed.SpeedListener;
+import android.util.Log;
 
 /**
  * Detects a step
  */
 public class StepSensor implements SensorEventListener 
 {
-    private final static float   DEFAULT_DIFF_LIMIT = 3; //default sensitivity
-    private float   m_PrevValue;
-    private float   m_PrevDirection;
-    private float   m_PrevExtreme[] = new float[2];
-    private float   m_PrevDiff;
-    private int     m_PrevMatch = -1;
+	//step detection variables
+	private float   mLimit = 1.97f;
+    private float   mLastValues[] = new float[3*2];
+    private float   mScale[] = new float[2];
+    private float   mYOffset;
+
+    private float   mLastDirections[] = new float[3*2];
+    private float   mLastExtremes[][] = { new float[3*2], new float[3*2] };
+    private float   mLastDiff[] = new float[3*2];
+    private int     mLastMatch = -1;
     
     private StepListener mStepListener;
-    
     private SensorManager sensorManager;
 	private Sensor accelerometer;
+	private StepData m_stepData;
+	
+	//speed calculation variables
+	private long timestampPrevStep = 0;
+	private float stepLength; //m
     
     public StepSensor(Context context) {
     	sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     	accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     	sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    	PedometerSettings settings = new PedometerSettings(context);
+    	stepLength = settings.getStepLength()/100;
+    	m_stepData = new StepData();
+    	
+    	int h = 480; // TODO: remove this constant
+        mYOffset = h * 0.5f;
+        mScale[0] = - (h * 0.5f * (1.0f / (SensorManager.STANDARD_GRAVITY * 2)));
+        mScale[1] = - (h * 0.5f * (1.0f / (SensorManager.MAGNETIC_FIELD_EARTH_MAX)));
     }
     
     public void setStepListener(StepListener _stepListener) {
@@ -37,59 +53,71 @@ public class StepSensor implements SensorEventListener
     }  
     
     @Override
-	public void onSensorChanged(SensorEvent event) {
-		Sensor sensor = event.sensor;
-		synchronized (this) {
-			if(sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-				onSensorChanged(event.values);
-			}
-		}
-	}
+    public void onSensorChanged(SensorEvent event) {
+        Sensor sensor = event.sensor; 
+        synchronized (this) {
+            if (sensor.getType() == Sensor.TYPE_ORIENTATION) {
+            }
+            else {
+                int j = (sensor.getType() == Sensor.TYPE_ACCELEROMETER) ? 1 : 0;
+                if (j == 1) {
+                    float vSum = 0;
+                    for (int i=0 ; i<3 ; i++) {
+                        final float v = mYOffset + event.values[i] * mScale[j];
+                        vSum += v;
+                    }
+                    int k = 0;
+                    float v = vSum / 3;
+                    
+                    float direction = (v > mLastValues[k] ? 1 : (v < mLastValues[k] ? -1 : 0));
+                    if (direction == - mLastDirections[k]) {
+                        // Direction changed
+                        int extType = (direction > 0 ? 0 : 1); // minumum or maximum?
+                        mLastExtremes[extType][k] = mLastValues[k];
+                        float diff = Math.abs(mLastExtremes[extType][k] - mLastExtremes[1 - extType][k]);
+
+                        if (diff > mLimit) {
+                            
+                            boolean isAlmostAsLargeAsPrevious = diff > (mLastDiff[k]*2/3);
+                            boolean isPreviousLargeEnough = mLastDiff[k] > (diff/3);
+                            boolean isNotContra = (mLastMatch != 1 - extType);
+                            
+                            if (isAlmostAsLargeAsPrevious && isPreviousLargeEnough && isNotContra) {
+                                calculateDistance();
+                                calculateSpeed(System.currentTimeMillis());
+                                mStepListener.onUpdateStepSensor(m_stepData);
+                                mLastMatch = extType;
+                            }
+                            else {
+                                mLastMatch = -1;
+                            }
+                        }
+                        mLastDiff[k] = diff;
+                    }
+                    mLastDirections[k] = direction;
+                    mLastValues[k] = v;
+                }
+            }
+        }
+    }
     
-	public void onSensorChanged(float[] eventValues) {
-		float actValue = (float)Math.sqrt(Math.pow(eventValues[0], 2)+Math.pow(eventValues[1], 2)+Math.pow(eventValues[2], 2));
-
-		float direction = 0;
-		
-		if (actValue > m_PrevValue) {
-			direction = 1;
-		} else if (actValue < m_PrevValue) {
-			direction = -1;
-		}
-
-		if (direction == -m_PrevDirection) { //check if direction changed
-			// Direction had changed
-			int extremeType = 1; //is it a minimum or a maximum?
-			if (direction > 0) { 
-				extremeType = 0;
-			}
-			
-			m_PrevExtreme[extremeType] = m_PrevValue;
-			float diff = Math.abs(m_PrevExtreme[extremeType] -  m_PrevExtreme[1 - extremeType]);
-
-			if (diff > DEFAULT_DIFF_LIMIT) { //is threshold big enough
-
-				boolean isNearlyAsLargeAsPrevious = diff > (m_PrevDiff * 2 / 3);
-				boolean isPreviousLargeEnough = m_PrevDiff > (diff / 3);
-				boolean isNotContra = (m_PrevMatch != 1 - extremeType);
-
-				if (isNearlyAsLargeAsPrevious && isPreviousLargeEnough && isNotContra) {
-					mStepListener.onStep();
-					//mSpeedListener.onSpeedChanged();
-					m_PrevMatch = extremeType;
-				} else {
-					m_PrevMatch = -1;
-				}
-			}
-			m_PrevDiff = diff;
-		}
-		m_PrevDirection = direction;
-		m_PrevValue = actValue;
-	}
-
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-		
 	}	
+	
+	public void calculateSpeed(long currentTimeMillis) {
+		if (timestampPrevStep == 0) {
+			timestampPrevStep = currentTimeMillis;
+		}
+		float diff = currentTimeMillis-timestampPrevStep;
+		float timeHours = diff / 1000 / 3600;
+		float speed = stepLength/1000 / timeHours; //in km/h
+		timestampPrevStep = currentTimeMillis;
+		
+		m_stepData.setM_speed(speed);
+	}
+	
+	public void calculateDistance() {
+		m_stepData.setM_distance(m_stepData.getM_distance()+stepLength);
+	}
 }

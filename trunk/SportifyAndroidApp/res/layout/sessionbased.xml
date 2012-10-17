@@ -77,10 +77,10 @@
 	android:layout_alignParentBottom="true"
 	android:layout_alignParentRight="true" />
 <TextView
-	android:id="@+id/stepstodayview"
+	android:id="@+id/speedview"
 	android:layout_width="70dp"
 	android:layout_height="30dp"
-	android:text="3.4"
+	android:text="0"
 	android:textSize="20sp"
 	android:typeface="sans"
 	android:textStyle="bold"
@@ -106,7 +106,7 @@
 	android:layout_alignParentRight="true"
 	android:layout_below="@id/widget43">
 <TextView
-	android:id="@+id/maxstepsperdayview"
+	android:id="@+id/distanceview"
 	android:layout_width="70dp"
 	android:layout_height="30dp"
 	android:text="0"
@@ -118,10 +118,10 @@
 	android:layout_above="@+id/widget50"
 	android:layout_alignParentRight="true" />
 <TextView
-	android:id="@+id/widget50"
+	android:id="@+id/distancelabel"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:text="empty field"
+	android:text="distance (m)"
 	android:textColor="@color/black"
 	android:layout_alignParentBottom="true"
 	android:layout_alignParentRight="true" />
