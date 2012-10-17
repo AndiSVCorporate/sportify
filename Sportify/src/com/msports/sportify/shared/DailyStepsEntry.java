@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.msports.sportify.server;
+package com.msports.sportify.shared;
 
 import java.util.Date;
 import java.util.List;
@@ -26,8 +26,10 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.msports.sportify.server.PMF;
+
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public class SessionEntry {
+public class DailyStepsEntry {
 
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -39,7 +41,7 @@ public class SessionEntry {
 	@Persistent
 	private Date date;
 
-	public SessionEntry(int stepsToday, Date date) {
+	public DailyStepsEntry(int stepsToday, Date date) {
 		this.stepsToday = stepsToday;
 		this.date = date;
 	}
@@ -51,18 +53,22 @@ public class SessionEntry {
 	public Long getId() {
 		return id;
 	}
+	
+	public Date getDate() {
+		return date;
+	}
 
 	public static void insert(int stepsToday, Date date) {
-		SessionEntry entry = new SessionEntry(stepsToday, date);
+		DailyStepsEntry entry = new DailyStepsEntry(stepsToday, date);
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		pm.makePersistent(entry);
 	}
 
-	public static List<SessionEntry> getEntries() {
+	public static List<DailyStepsEntry> getEntries() {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query query = pm.newQuery(SessionEntry.class);
+		Query query = pm.newQuery(DailyStepsEntry.class);
 		query.setOrdering("date DESC");
-		List<SessionEntry> entries = (List<SessionEntry>) query.execute();
+		List<DailyStepsEntry> entries = (List<DailyStepsEntry>) query.execute();
 		return entries;
 	}
 }

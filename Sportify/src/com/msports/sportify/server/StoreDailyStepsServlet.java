@@ -14,10 +14,12 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+import com.msports.sportify.shared.DailyStepsData;
+import com.msports.sportify.shared.DailyStepsEntry;
 import com.msports.sportify.shared.Session;
 import com.msports.sportify.shared.SessionEntry;
 
-public class StoreSessionServlet extends HttpServlet {
+public class StoreDailyStepsServlet extends HttpServlet {
 
 	/**
 	 * 
@@ -30,36 +32,15 @@ public class StoreSessionServlet extends HttpServlet {
 
 		String data = req.getParameter("data");
 		Gson gson = new Gson();
-		Session session = gson.fromJson(data, Session.class);
+		DailyStepsData dailyStepsData = gson.fromJson(data, DailyStepsData.class);
 
 		resp.setContentType("text/plain");
 		PrintWriter out = resp.getWriter();
-		if(session != null) {
-			out.println(session.getStepsToday() + " Schritte!");
+		if(dailyStepsData != null) {
+			out.println(dailyStepsData.getStepsToday() + " Schritte heute!");
 			out.flush();
 
-			SessionEntry.insert(session.getStepsToday(), new Date());
-//			List<SessionEntry> sessions = SessionEntry.getEntries();
-//			PrintWriter writer = resp.getWriter();
-//			for (SessionEntry sessionEntry : sessions) {
-//				writer.println(sessionEntry.getId() + " , "
-//						+ sessionEntry.getStepsToday());
-//			}
+			DailyStepsEntry.insert(dailyStepsData.getStepsToday(), new Date());
 		}
-		
-
-		// UserService userService = UserServiceFactory.getUserService();
-		// User user = userService.getCurrentUser();
-		//
-		//
-		// if (user != null) {
-
-		// writer.println("Hello, " + user.getNickname());
-
-		// } else {
-		// resp.sendRedirect(userService.createLoginURL(req.getRequestURI()));
-		// }
-
 	}
-
 }
