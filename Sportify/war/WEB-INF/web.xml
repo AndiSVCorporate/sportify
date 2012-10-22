@@ -19,6 +19,15 @@
         <url-pattern>/storeDailySteps</url-pattern>
     </servlet-mapping>
     
+     <servlet>
+        <servlet-name>getDailyStepsDataServlet</servlet-name>
+        <servlet-class>com.msports.sportify.server.GetDailyStepsDataServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>getDailyStepsDataServlet</servlet-name>
+        <url-pattern>/getDailyStepsData</url-pattern>
+    </servlet-mapping>
+    
   <servlet>
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>com.msports.sportify.server.GreetingServiceImpl</servlet-class>
@@ -46,22 +55,6 @@
   <servlet-mapping>
     <servlet-name>SystemServiceServlet</servlet-name>
     <url-pattern>/_ah/spi/*</url-pattern>
-  </servlet-mapping>
-  
-  <!-- Default page to serve -->
-  <welcome-file-list>
-    <welcome-file>StockWatcher.html</welcome-file>
-  </welcome-file-list>
-
-  <!-- Servlets -->
-  <servlet>
-    <servlet-name>stockPriceServiceImpl</servlet-name>
-    <servlet-class>com.google.gwt.sample.stockwatcher.server.StockPriceServiceImpl</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>stockPriceServiceImpl</servlet-name>
-    <url-pattern>/stockwatcher/stockPrices</url-pattern>
   </servlet-mapping>
 
 </web-app>
