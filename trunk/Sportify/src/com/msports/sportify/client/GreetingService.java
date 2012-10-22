@@ -13,5 +13,5 @@ public interface GreetingService extends RemoteService {
 	String greetServer(String name) throws IllegalArgumentException;
 	int getInteger(int i) throws IllegalArgumentException;
 	DailyStepsData[] getDailyStepsData() throws IllegalArgumentException;
-	DailyStepsEntry getDailyStepsData1() throws IllegalArgumentException;
+//	DailyStepsEntry getDailyStepsData1() throws IllegalArgumentException;
 }
