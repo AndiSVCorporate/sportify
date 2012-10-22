@@ -1,6 +1,10 @@
 package com.msports.sportify.server;
 
+import java.util.List;
+
 import com.msports.sportify.client.GreetingService;
+import com.msports.sportify.shared.DailyStepsData;
+import com.msports.sportify.shared.DailyStepsEntry;
 import com.msports.sportify.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -44,5 +48,26 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 		return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;")
 				.replaceAll(">", "&gt;");
+	}
+
+	@Override
+	public int getInteger(int i) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return i+1;
+	}
+
+	@Override
+	public DailyStepsData[] getDailyStepsData()
+			throws IllegalArgumentException {
+		List<DailyStepsEntry> entries = DailyStepsEntry.getEntries();
+		DailyStepsEntry entry = entries.get(0);
+//		return (DailyStepsEntry[]) DailyStepsEntry.getEntries().toArray();
+		return new DailyStepsData[]{new DailyStepsData(entry.getStepsToday(), entry.getDate().getTime())};
+//		return new DailyStepsData[]{new DailyStepsData(11, System.currentTimeMillis())};
+	}
+
+	@Override
+	public DailyStepsEntry getDailyStepsData1() throws IllegalArgumentException {
+		return DailyStepsEntry.getEntries().get(0);
 	}
 }

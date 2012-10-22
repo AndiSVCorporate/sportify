@@ -1,5 +1,6 @@
 package com.msports.sportify.client;
 
+import com.msports.sportify.shared.DailyStepsData;
 import com.msports.sportify.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -8,6 +9,14 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.jsonp.client.JsonpRequest;
+import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -91,7 +100,60 @@ public class Sportify implements EntryPoint {
 			 * Fired when the user clicks on the sendButton.
 			 */
 			public void onClick(ClickEvent event) {
-				sendNameToServer();
+				final int rpcAntwort = 0;
+				greetingService.getDailyStepsData(new AsyncCallback<DailyStepsData[]>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						dialogBox.setText("RPC - methods");
+						serverResponseLabel
+								.removeStyleName("serverResponseLabelError");
+						serverResponseLabel.setHTML(caught.toString() + " Fehler");
+						dialogBox.center();
+					}
+
+					@Override
+					public void onSuccess(DailyStepsData[] result) {
+						dialogBox.setText("RPC - methods");
+						serverResponseLabel
+								.removeStyleName("serverResponseLabelError");
+						serverResponseLabel.setHTML(result[0].getStepsToday() + " Zahl");
+						dialogBox.center();
+					}
+				});
+				
+				
+//				sendNameToServer();
+				
+//				String url = "http://sportify-msports.appspot.com/getDailyStepsData?callback=callback125";
+//				String url = "http://127.0.0.1:8888/getDailyStepsData";
+//				JsonpRequestBuilder builder = new JsonpRequestBuilder();
+//			
+//
+//				
+//				  JsonpRequest<String> request = builder.requestString(url, new AsyncCallback<String>() {
+//				  
+//
+//					@Override
+//					public void onFailure(Throwable caught) {
+//						dialogBox
+//						.setText("Remote Procedure Call - Failure");
+//			
+//				serverResponseLabel.setHTML(caught.toString());
+//				dialogBox.center();
+//				closeButton.setFocus(true);
+//					}
+//
+//					@Override
+//					public void onSuccess(String result) {
+//						dialogBox.setText("HTTP - JSON - Request");
+//						serverResponseLabel
+//								.removeStyleName("serverResponseLabelError");
+//						serverResponseLabel.setHTML(result);
+//						dialogBox.center();
+//					}
+//				  });
+//				
 			}
 
 			/**
@@ -143,6 +205,8 @@ public class Sportify implements EntryPoint {
 						});
 			}
 		}
+		
+		
 
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
