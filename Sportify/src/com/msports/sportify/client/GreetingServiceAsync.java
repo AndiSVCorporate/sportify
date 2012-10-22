@@ -12,5 +12,5 @@ public interface GreetingServiceAsync {
 			throws IllegalArgumentException;
 	void getInteger(int i, AsyncCallback<Integer> callback) throws IllegalArgumentException;
 	void getDailyStepsData(AsyncCallback<DailyStepsData[]> callback) throws IllegalArgumentException;
-	void getDailyStepsData1(AsyncCallback<DailyStepsEntry> callback) throws IllegalArgumentException;
+//	void getDailyStepsData1(AsyncCallback<DailyStepsEntry> callback) throws IllegalArgumentException;
 }

@@ -66,8 +66,4 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 //		return new DailyStepsData[]{new DailyStepsData(11, System.currentTimeMillis())};
 	}
 
-	@Override
-	public DailyStepsEntry getDailyStepsData1() throws IllegalArgumentException {
-		return DailyStepsEntry.getEntries().get(0);
-	}
 }
