@@ -1,7 +1,14 @@
 package com.msports.sportify.shared;
 
-public class DailyStepsData {
+import java.io.Serializable;
 
+public class DailyStepsData implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2676624179114736970L;
+	
 	private int stepsToday;
 	private long date;
 	
