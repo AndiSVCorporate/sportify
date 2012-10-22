@@ -32,7 +32,6 @@ import com.msports.sportify.server.PMF;
 public class DailyStepsEntry {
 
 	@PrimaryKey
-//	@Tra
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Long id;
 
