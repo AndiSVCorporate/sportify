@@ -259,16 +259,15 @@ public class Sportify implements EntryPoint {
 	private AbstractDataTable createTable(List<DailyStepsEntryOfy> result) {
 
 		DataTable data = DataTable.create();
-		data.addColumn(ColumnType.STRING, "");
-		data.addColumn(ColumnType.STRING, "");
-		data.addColumn(ColumnType.NUMBER, "Average Heart Rate");
+		data.addColumn(ColumnType.STRING, "");		
+		data.addColumn(ColumnType.NUMBER, "Steps per day");
 		if (result != null) {
 			data.addRows(result.size());
 			
 			int i = 0;
 			for(DailyStepsEntryOfy res : result) {
-				data.setValue(i, 2, res.getStepsToday());
-				data.setValue(i,1,"Test");
+				data.setValue(i, 1, res.getStepsToday());
+				//data.setValue(i,1,"Test");
 				data.setValue(i,0,""+(i+1));	
 				i++;
 			}				
