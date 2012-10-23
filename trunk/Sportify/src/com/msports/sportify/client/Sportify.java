@@ -41,8 +41,8 @@ public class Sportify implements EntryPoint {
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting service.
 	 */
-	private final GreetingServiceAsync greetingService = GWT
-			.create(GreetingService.class);
+	private final SportifyServiceAsync sportifyService = GWT
+			.create(SportifyService.class);
 
 	/**
 	 * This is the entry point method.
@@ -101,7 +101,7 @@ public class Sportify implements EntryPoint {
 			 */
 			public void onClick(ClickEvent event) {
 				final int rpcAntwort = 0;
-				greetingService.getDailyStepsData(new AsyncCallback<DailyStepsData[]>() {
+				sportifyService.getDailyStepsData(new AsyncCallback<DailyStepsData[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -181,7 +181,7 @@ public class Sportify implements EntryPoint {
 				sendButton.setEnabled(false);
 				textToServerLabel.setText(textToServer);
 				serverResponseLabel.setText("");
-				greetingService.greetServer(textToServer,
+				sportifyService.greetServer(textToServer,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user

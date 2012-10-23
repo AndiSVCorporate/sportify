@@ -2,18 +2,18 @@ package com.msports.sportify.server;
 
 import java.util.List;
 
-import com.msports.sportify.client.GreetingService;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.msports.sportify.client.SportifyService;
 import com.msports.sportify.shared.DailyStepsData;
 import com.msports.sportify.shared.DailyStepsEntry;
 import com.msports.sportify.shared.FieldVerifier;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
  * The server side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
-public class GreetingServiceImpl extends RemoteServiceServlet implements
-		GreetingService {
+public class SportifyServiceImpl extends RemoteServiceServlet implements
+SportifyService {
 
 	public String greetServer(String input) throws IllegalArgumentException {
 		// Verify that the input is valid. 

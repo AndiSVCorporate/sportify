@@ -6,7 +6,7 @@ import com.msports.sportify.shared.DailyStepsData;
 /**
  * The async counterpart of <code>GreetingService</code>.
  */
-public interface GreetingServiceAsync {
+public interface SportifyServiceAsync {
 	void greetServer(String input, AsyncCallback<String> callback)
 			throws IllegalArgumentException;
 	void getInteger(int i, AsyncCallback<Integer> callback) throws IllegalArgumentException;
