@@ -19,6 +19,7 @@ public class SessionFragment extends Fragment {
 	private TextView m_speedView;
 	private TextView m_distanceView;
 	private TextView m_heartRateView;
+	private TextView m_kcalView;
 	
 	private SessionManager manager;
 	
@@ -37,6 +38,7 @@ public class SessionFragment extends Fragment {
 		m_speedView = (TextView)view.findViewById(R.id.speedview);
 		m_distanceView = (TextView)view.findViewById(R.id.distanceview);
 		m_heartRateView = (TextView)view.findViewById(R.id.heartrateview);
+		m_kcalView = (TextView)view.findViewById(R.id.kcalview);
 
 		return view;
 	}
@@ -48,6 +50,8 @@ public class SessionFragment extends Fragment {
 				m_heartRateView.setText("" + model.getCurrentHeartRate());
 				m_distanceView.setText("" + model.getDistance());
 				m_speedView.setText("" + model.getSpeed());
+				m_kcalView.setText("" + model.getCalories());
+				m_trimpView.setText("" + model.getTrimpScore());
 			}
 		});		
 	}

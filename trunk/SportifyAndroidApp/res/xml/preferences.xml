@@ -40,6 +40,13 @@
                 android:summary="@string/vomax_setting_details"
                 android:dialogTitle="@string/vomax_setting_title"
                 android:defaultValue="50" />
+        
+        <com.msports.sportify.preferences.RestingHeartRatePreference
+                android:key="hrrest"
+                android:title="@string/hrrest_setting"
+                android:summary="@string/hrrest_setting_details"
+                android:dialogTitle="@string/hrrest_setting_title"
+                android:defaultValue="45" />
 
     </PreferenceCategory>
     

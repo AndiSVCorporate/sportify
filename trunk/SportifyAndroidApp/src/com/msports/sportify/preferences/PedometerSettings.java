@@ -29,4 +29,40 @@ public class PedometerSettings {
             return 0f;
         }
     }
+    
+    public int getRestingHeartRate() { //pulse
+        try {
+        	return Integer.valueOf(mSettings.getString("hrrest", "50").trim());
+        }
+        catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+	public int getGender() {
+		try {
+        	return Integer.valueOf(mSettings.getString("gender", "1").trim());
+        }
+        catch (NumberFormatException e) {
+            return 0;
+        }
+	}
+
+	public int getAge() {
+		try {
+        	return Integer.valueOf(mSettings.getString("age", "30").trim());
+        }
+        catch (NumberFormatException e) {
+            return 0;
+        }
+	}
+
+	public float getVoMax() {
+		try {
+            return Float.valueOf(mSettings.getString("vomax", "50").trim());
+        }
+        catch (NumberFormatException e) {
+            return 0f;
+        }
+	}
 }

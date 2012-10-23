@@ -11,7 +11,9 @@ public class SessionModel {
 	private float distance; 
 	private float speed;
 	
-	private int trimpScore;
+	private float calories;
+	
+	private float trimpScore;
 
 	public SessionModel() {
 		resetValues();
@@ -23,7 +25,8 @@ public class SessionModel {
 		maxHeartRate = -1;
 		currentHeartRate = -1;
 		currentPercentageOfMaxHeartRate = -1;
-		trimpScore = -1;
+		trimpScore = 0;
+		calories = 0;
 		distance = -1;
 		speed = -1;
 	}
@@ -69,11 +72,11 @@ public class SessionModel {
 		this.currentHeartRate = currentHeartRate;
 	}
 
-	public int getTrimpScore() {
+	public float getTrimpScore() {
 		return trimpScore;
 	}
 
-	public void setTrimpScore(int trimpScore) {
+	public void setTrimpScore(float trimpScore) {
 		this.trimpScore = trimpScore;
 	}
 
@@ -93,7 +96,13 @@ public class SessionModel {
 		this.speed = speed;
 	}
 	
-	
+	public float getCalories() {
+		return calories;
+	}
+
+	public void setCalories(float calories) {
+		this.calories = calories;
+	}
 	
 	
 }

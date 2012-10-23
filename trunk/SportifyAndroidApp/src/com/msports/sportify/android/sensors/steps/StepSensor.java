@@ -43,7 +43,7 @@ public class StepSensor implements SensorEventListener
     	sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     	m_stepData = new StepData();
     	
-    	int h = 480; // TODO: remove this constant
+    	int h = 480;
         mYOffset = h * 0.5f;
         mScale[0] = - (h * 0.5f * (1.0f / (SensorManager.STANDARD_GRAVITY * 2)));
         mScale[1] = - (h * 0.5f * (1.0f / (SensorManager.MAGNETIC_FIELD_EARTH_MAX)));
