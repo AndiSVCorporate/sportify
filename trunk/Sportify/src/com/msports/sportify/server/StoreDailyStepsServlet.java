@@ -2,23 +2,15 @@ package com.msports.sportify.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.msports.sportify.shared.DailyStepsData;
-import com.msports.sportify.shared.DailyStepsEntry;
 import com.msports.sportify.shared.OfyUtil;
-import com.msports.sportify.shared.Session;
-import com.msports.sportify.shared.SessionEntry;
 
 public class StoreDailyStepsServlet extends HttpServlet {
 

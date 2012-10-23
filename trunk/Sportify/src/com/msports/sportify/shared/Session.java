@@ -1,53 +1,46 @@
 package com.msports.sportify.shared;
 
-public class Session {
+import javax.jdo.annotations.Index;
+import javax.persistence.Id;
 
-	private int stepsToday;
-	private int avgStepFrequency;
-	private int maxStepFrequency;
-	private long time;
+import com.googlecode.objectify.annotation.Entity;
+
+@Entity
+public class Session {
+	
+	@Id
+	private Long id;
+	private String user;	
+	
+	@Index	
+	private long startTime;
+	private long duration;
+	
 	private int temperature;
 	private int condition;
-	private int calories;
+	
 	private int avgHeartRate;
 	private int maxHeartRate;
+	private String heartRateTrace;
 	
-	public Session(int stepsToday,  long time, int temperature) {
-		this.stepsToday = stepsToday;
-		this.time = time;
-		this.temperature = temperature;
-	}
+	private int trimpScore;
+	private int calories;
+	
+	private int distance;
 	
 	public Session() {
-		this.stepsToday = 1;
-		this.time = 12;
-		this.temperature = 123;
-	}
+		this.startTime = System.currentTimeMillis();
+		this.duration = 0;
+		this.temperature = -1;
+		this.condition = -1;
+		this.avgHeartRate = -1;
+		this.maxHeartRate = -1;
+		this.heartRateTrace = null;
+		this.trimpScore = -1;
+		this.calories = -1;
+		this.user = "testuser";
+	}	
 	
-	public int getStepsToday() {
-		return stepsToday;
-	}
-	public void setStepsToday(int stepsToday) {
-		this.stepsToday = stepsToday;
-	}
-	public int getAvgStepFrequency() {
-		return avgStepFrequency;
-	}
-	public void setAvgStepFrequency(int avgStepFrequency) {
-		this.avgStepFrequency = avgStepFrequency;
-	}
-	public int getMaxStepFrequency() {
-		return maxStepFrequency;
-	}
-	public void setMaxStepFrequency(int maxStepFrequency) {
-		this.maxStepFrequency = maxStepFrequency;
-	}
-	public long getTime() {
-		return time;
-	}
-	public void setTime(long time) {
-		this.time = time;
-	}
 	public int getTemperature() {
 		return temperature;
 	}
@@ -75,9 +68,67 @@ public class Session {
 	public int getMaxHeartRate() {
 		return maxHeartRate;
 	}
+	public long getStartTime() {
+		return startTime;
+	}
+
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
+
+	public long getDuration() {
+		return duration;
+	}
+
+
+	public void setDuration(long duration) {
+		this.duration = duration;
+	}
+
+
+	public String getHeartRateTrace() {
+		return heartRateTrace;
+	}
+
+
+	public void setHeartRateTrace(String heartRateTrace) {
+		this.heartRateTrace = heartRateTrace;
+	}
+
+
+	public int getTrimpScore() {
+		return trimpScore;
+	}
+
+
+	public void setTrimpScore(int trimpScore) {
+		this.trimpScore = trimpScore;
+	}
+
+
+	public int getDistance() {
+		return distance;
+	}
+
+
+	public void setDistance(int distance) {
+		this.distance = distance;
+	}
+
+
 	public void setMaxHeartRate(int maxHeartRate) {
 		this.maxHeartRate = maxHeartRate;
 	}
 	
-	
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+
 }

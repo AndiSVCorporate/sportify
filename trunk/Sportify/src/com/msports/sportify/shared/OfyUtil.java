@@ -21,4 +21,13 @@ public class OfyUtil {
 		
 		ofy().put(entry);
 	}
+	
+	public static void insertSessionEntry(Session session) {
+		ofy().put(session);
+	}
+	
+	public static List<Session> getSessionsOfUser(String user) {
+		Query<Session> query = ofy().query(Session.class).filter("user", user).order("starttime");
+		return query.list();
+	}
 }
