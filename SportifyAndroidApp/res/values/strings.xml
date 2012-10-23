@@ -17,5 +17,9 @@
     <string name="vomax_setting_details">Estimation using non-exercise measurements</string>
     <string name="vomax_setting">VO2max</string>
     <string name="vomax">ml/kg/min</string>
+    <string name="pulse">pulse</string>
+    <string name="hrrest_setting_title">Enter your resting HR</string>
+    <string name="hrrest_setting">Resting HR</string>
+    <string name="hrrest_setting_details">For trimp calculation</string>
 
 </resources>

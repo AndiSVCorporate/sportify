@@ -24,6 +24,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -87,6 +88,7 @@ public class MainActivity extends FragmentActivity {
         
         //load the user defined settings
         mPedometerSettings = new PedometerSettings(this);
+        Log.i("pedometer",String.valueOf(mPedometerSettings.getRestingHeartRate()));
         
         m_model = new PedometerModel(totalSteps, firstOpeningToday, stepsToday);
 
