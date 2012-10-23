@@ -1,6 +1,9 @@
 package com.msports.sportify.client;
 
+import java.util.List;
+
 import com.msports.sportify.shared.DailyStepsData;
+import com.msports.sportify.shared.DailyStepsEntryOfy;
 import com.msports.sportify.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -101,7 +104,7 @@ public class Sportify implements EntryPoint {
 			 */
 			public void onClick(ClickEvent event) {
 				final int rpcAntwort = 0;
-				sportifyService.getDailyStepsData(new AsyncCallback<DailyStepsData[]>() {
+				sportifyService.getDailyStepsDataOfUser("testuser", new AsyncCallback<List<DailyStepsEntryOfy>>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -113,11 +116,11 @@ public class Sportify implements EntryPoint {
 					}
 
 					@Override
-					public void onSuccess(DailyStepsData[] result) {
+					public void onSuccess(List<DailyStepsEntryOfy> result) {
 						dialogBox.setText("RPC - methods");
 						serverResponseLabel
 								.removeStyleName("serverResponseLabelError");
-						serverResponseLabel.setHTML(result[0].getStepsToday() + " Zahl");
+						serverResponseLabel.setHTML(result.get(0).getStepsToday() + " Zahl");
 						dialogBox.center();
 					}
 				});

@@ -11,6 +11,7 @@ public class DailyStepsData implements Serializable{
 	
 	private int stepsToday;
 	private long date;
+	private String user;
 	
 	public DailyStepsData() {
 		stepsToday = -1;
@@ -33,5 +34,13 @@ public class DailyStepsData implements Serializable{
 	}
 	public void setDate(long date) {
 		this.date = date;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
 	}	
 }

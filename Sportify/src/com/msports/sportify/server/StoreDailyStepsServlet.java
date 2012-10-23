@@ -16,6 +16,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.msports.sportify.shared.DailyStepsData;
 import com.msports.sportify.shared.DailyStepsEntry;
+import com.msports.sportify.shared.OfyUtil;
 import com.msports.sportify.shared.Session;
 import com.msports.sportify.shared.SessionEntry;
 
@@ -33,14 +34,19 @@ public class StoreDailyStepsServlet extends HttpServlet {
 		String data = req.getParameter("data");
 		Gson gson = new Gson();
 		DailyStepsData dailyStepsData = gson.fromJson(data, DailyStepsData.class);
-
+		if(dailyStepsData.getDate() <= 0) {
+			dailyStepsData.setDate(System.currentTimeMillis());
+		}
+		if(dailyStepsData.getUser() == null || (dailyStepsData.getUser().length() == 0)) {
+			dailyStepsData.setUser("testuser");
+		}
+		
 		resp.setContentType("text/plain");
 		PrintWriter out = resp.getWriter();
 		if(dailyStepsData != null) {
 			out.println(dailyStepsData.getStepsToday() + " Schritte heute!");
 			out.flush();
-
-			DailyStepsEntry.insert(dailyStepsData.getStepsToday(), new Date());
+			OfyUtil.insertDailyStepsEntry(dailyStepsData);
 		}
 	}
 }
