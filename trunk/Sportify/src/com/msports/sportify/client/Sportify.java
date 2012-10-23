@@ -1,6 +1,5 @@
 package com.msports.sportify.client;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,10 +48,7 @@ public class Sportify implements EntryPoint {
 	private static final int REFRESH_INTERVAL = 5000; // ms
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private FlexTable stocksFlexTable = new FlexTable();
-	private Label lastUpdatedLabel = new Label();
-	private ArrayList<String> stocks = new ArrayList<String>();  
-	private ArrayList<String> sessions = new ArrayList<String>();  
-	private StockPriceServiceAsync stockPriceSvc = GWT.create(StockPriceService.class);
+	private Label lastUpdatedLabel = new Label();	
 	private boolean firstIn = false;
 	private final Label lblNewLabel = new Label("Steps overall: ");
 	private final Label lblOverallSteps = new Label("");
