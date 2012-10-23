@@ -10,6 +10,7 @@ import com.msports.sportify.shared.DailyStepsEntry;
 import com.msports.sportify.shared.DailyStepsEntryOfy;
 import com.msports.sportify.shared.FieldVerifier;
 import com.msports.sportify.shared.OfyUtil;
+import com.msports.sportify.shared.Session;
 
 /**
  * The server side implementation of the RPC service.
@@ -64,6 +65,12 @@ SportifyService {
 			throws IllegalArgumentException {
 		return OfyUtil.getDailyStepsOfUser(user);
 //		return new DailyStepsData[]{new DailyStepsData(11, System.currentTimeMillis())};
+	}
+
+	@Override
+	public List<Session> getSessionsOfUser(String user)
+			throws IllegalArgumentException {
+		return OfyUtil.getSessionsOfUser(user);
 	}
 
 }

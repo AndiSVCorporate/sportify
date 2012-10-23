@@ -14,6 +14,7 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+import com.msports.sportify.shared.OfyUtil;
 import com.msports.sportify.shared.Session;
 import com.msports.sportify.shared.SessionEntry;
 
@@ -35,16 +36,10 @@ public class StoreSessionServlet extends HttpServlet {
 		resp.setContentType("text/plain");
 		PrintWriter out = resp.getWriter();
 		if(session != null) {
-			out.println(session.getStepsToday() + " Schritte!");
+			out.println(session.getAvgHeartRate() + " HeartRate!");
 			out.flush();
 
-			SessionEntry.insert(session.getStepsToday(), new Date());
-//			List<SessionEntry> sessions = SessionEntry.getEntries();
-//			PrintWriter writer = resp.getWriter();
-//			for (SessionEntry sessionEntry : sessions) {
-//				writer.println(sessionEntry.getId() + " , "
-//						+ sessionEntry.getStepsToday());
-//			}
+			OfyUtil.insertSessionEntry(session);
 		}
 		
 
