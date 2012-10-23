@@ -1,12 +1,15 @@
 package com.msports.sportify.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.msports.sportify.client.SportifyService;
 import com.msports.sportify.shared.DailyStepsData;
 import com.msports.sportify.shared.DailyStepsEntry;
+import com.msports.sportify.shared.DailyStepsEntryOfy;
 import com.msports.sportify.shared.FieldVerifier;
+import com.msports.sportify.shared.OfyUtil;
 
 /**
  * The server side implementation of the RPC service.
@@ -57,12 +60,9 @@ SportifyService {
 	}
 
 	@Override
-	public DailyStepsData[] getDailyStepsData()
+	public List<DailyStepsEntryOfy> getDailyStepsDataOfUser(String user)
 			throws IllegalArgumentException {
-		List<DailyStepsEntry> entries = DailyStepsEntry.getEntries();
-		DailyStepsEntry entry = entries.get(0);
-//		return (DailyStepsEntry[]) DailyStepsEntry.getEntries().toArray();
-		return new DailyStepsData[]{new DailyStepsData(entry.getStepsToday(), entry.getDate().getTime())};
+		return OfyUtil.getDailyStepsOfUser(user);
 //		return new DailyStepsData[]{new DailyStepsData(11, System.currentTimeMillis())};
 	}
 
