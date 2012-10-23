@@ -1,4 +1,4 @@
-package com.msports.sportify.android;
+package com.msports.sportify.android.webservice;
 
 public class Session {
 

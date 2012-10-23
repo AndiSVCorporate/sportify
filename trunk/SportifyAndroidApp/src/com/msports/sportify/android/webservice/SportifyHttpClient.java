@@ -1,4 +1,4 @@
-package com.msports.sportify.android;
+package com.msports.sportify.android.webservice;
 
 import java.io.IOException;
 import java.io.InputStream;

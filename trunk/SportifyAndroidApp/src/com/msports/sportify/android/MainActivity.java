@@ -6,6 +6,7 @@ import java.util.Date;
 import com.msports.sportify.android.model.PedometerModel;
 import com.msports.sportify.android.model.SessionModel;
 import com.msports.sportify.android.session.SessionManager;
+import com.msports.sportify.android.webservice.UploadFragment;
 import com.msports.sportify.preferences.PedometerSettings;
 
 import android.content.Context;
