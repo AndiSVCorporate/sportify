@@ -1,7 +1,10 @@
-package com.msports.sportify.android;
+package com.msports.sportify.android.webservice;
 
 import com.google.gson.Gson;
-import com.msports.sportify.android.SportifyHttpClient.RequestMethod;
+import com.msports.sportify.android.R;
+import com.msports.sportify.android.R.id;
+import com.msports.sportify.android.R.layout;
+import com.msports.sportify.android.webservice.SportifyHttpClient.RequestMethod;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;

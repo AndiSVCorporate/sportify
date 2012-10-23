@@ -24,6 +24,8 @@ public class SessionModel {
 		currentHeartRate = -1;
 		currentPercentageOfMaxHeartRate = -1;
 		trimpScore = -1;
+		distance = -1;
+		speed = -1;
 	}
 	
 	public int getAvgHeartRate() {
