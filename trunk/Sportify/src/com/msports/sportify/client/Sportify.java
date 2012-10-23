@@ -1,38 +1,37 @@
 package com.msports.sportify.client;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import com.msports.sportify.shared.DailyStepsData;
-import com.msports.sportify.shared.DailyStepsEntryOfy;
-import com.msports.sportify.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.jsonp.client.JsonpRequest;
-import com.google.gwt.jsonp.client.JsonpRequestBuilder;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.visualization.client.AbstractDataTable;
+import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
 
-/**
- * Entry point classes define <code>onModuleLoad()</code>.
- */
+import com.google.gwt.visualization.client.DataTable;
+import com.google.gwt.visualization.client.Selection;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.events.SelectHandler;
+import com.google.gwt.visualization.client.visualizations.LineChart;
+import com.google.gwt.visualization.client.visualizations.LineChart.Options;
+import com.msports.sportify.shared.DailyStepsEntryOfy;
+
 public class Sportify implements EntryPoint {
+
 	/**
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.
@@ -44,176 +43,240 @@ public class Sportify implements EntryPoint {
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting service.
 	 */
-	private final SportifyServiceAsync sportifyService = GWT
+	private final SportifyServiceAsync greetingService = GWT
 			.create(SportifyService.class);
 
+	private static final int REFRESH_INTERVAL = 5000; // ms
+	private VerticalPanel mainPanel = new VerticalPanel();
+	private FlexTable stocksFlexTable = new FlexTable();
+	private Label lastUpdatedLabel = new Label();
+	private ArrayList<String> stocks = new ArrayList<String>();  
+	private ArrayList<String> sessions = new ArrayList<String>();  
+	private StockPriceServiceAsync stockPriceSvc = GWT.create(StockPriceService.class);
+	private boolean firstIn = false;
+	private final Label lblNewLabel = new Label("Steps overall: ");
+	private final Label lblOverallSteps = new Label("");
+	private final Label lblAverageStepsPer = new Label("Average Steps per Day:  ");
+	private final VerticalPanel verticalPanel = new VerticalPanel();
+	private final HorizontalPanel horizontalPanel = new HorizontalPanel();
+	private final Label lblAverageSteps = new Label("");
+	private final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
+	private LineChart linChart; 
+
 	/**
-	 * This is the entry point method.
+	 * Entry point method.
 	 */
-	public void onModuleLoad() {
-		final Button sendButton = new Button("Send");
-		final TextBox nameField = new TextBox();
-		nameField.setText("GWT User");
-		final Label errorLabel = new Label();
+	/* (non-Javadoc)
+	 * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
+	 */
+	public void onModuleLoad() {	    
+		// Create table for stock data.	
+		stocksFlexTable.setText(0, 0, "Id");
+		stocksFlexTable.setText(0, 1, "Steps");
+		stocksFlexTable.setText(0, 2, "Day");
+		stocksFlexTable.setText(0, 3, "Steps to Go");
+		stocksFlexTable.setText(0, 4, "AverageHeartRate");
 
-		// We can add style names to widgets
-		sendButton.addStyleName("sendButton");
+		// Add styles to elements in the stock list table.
+		stocksFlexTable.setCellPadding(6);
+		stocksFlexTable.getRowFormatter().addStyleName(0, "watchListHeader");
+		stocksFlexTable.addStyleName("watchList");
+		stocksFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
+		stocksFlexTable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
+		stocksFlexTable.getCellFormatter().addStyleName(0, 3, "watchListNumericColumn");   
+		stocksFlexTable.getCellFormatter().addStyleName(0, 4, "watchListNumericColumn"); 
+		mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 
-		// Add the nameField and sendButton to the RootPanel
-		// Use RootPanel.get() to get the entire body element
-		RootPanel.get("nameFieldContainer").add(nameField);
-		RootPanel.get("sendButtonContainer").add(sendButton);
-		RootPanel.get("errorLabelContainer").add(errorLabel);
+		// Assemble Main panel.
+		mainPanel.add(stocksFlexTable);
+		mainPanel.setCellVerticalAlignment(stocksFlexTable, HasVerticalAlignment.ALIGN_MIDDLE);
+		mainPanel.setCellHorizontalAlignment(stocksFlexTable, HasHorizontalAlignment.ALIGN_CENTER);
+		stocksFlexTable.setWidth("400px");
 
-		// Focus the cursor on the name field when the app loads
-		nameField.setFocus(true);
-		nameField.selectAll();
+		mainPanel.add(verticalPanel);
+		verticalPanel.add(horizontalPanel);
+		horizontalPanel.add(lblNewLabel);
+		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		lblOverallSteps.setStyleName("watchListGroundData");
+		horizontalPanel.add(lblOverallSteps);
 
-		// Create the popup dialog box
-		final DialogBox dialogBox = new DialogBox();
-		dialogBox.setText("Remote Procedure Call");
-		dialogBox.setAnimationEnabled(true);
-		final Button closeButton = new Button("Close");
-		// We can set the id of a widget by accessing its Element
-		closeButton.getElement().setId("closeButton");
-		final Label textToServerLabel = new Label();
-		final HTML serverResponseLabel = new HTML();
-		VerticalPanel dialogVPanel = new VerticalPanel();
-		dialogVPanel.addStyleName("dialogVPanel");
-		dialogVPanel.add(new HTML("<b>Sending name to the server:</b>"));
-		dialogVPanel.add(textToServerLabel);
-		dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
-		dialogVPanel.add(serverResponseLabel);
-		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
-		dialogVPanel.add(closeButton);
-		dialogBox.setWidget(dialogVPanel);
+		verticalPanel.add(horizontalPanel_1);
+		horizontalPanel_1.add(lblAverageStepsPer);
+		lblAverageSteps.setStyleName("watchListGroundData");
+		horizontalPanel_1.add(lblAverageSteps);
+		mainPanel.add(lastUpdatedLabel);
 
-		// Add a handler to close the DialogBox
-		closeButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				dialogBox.hide();
-				sendButton.setEnabled(true);
-				sendButton.setFocus(true);
+		// Associate the Main panel with the HTML host page.
+		RootPanel rootPanel = RootPanel.get("stockList");
+		rootPanel.add(mainPanel);
+
+		// Setup timer to refresh list automatically.
+		refreshWatchList();
+		Timer refreshTimer = new Timer() {
+			@Override
+			public void run() {
+				refreshWatchList();
 			}
-		});
-
-		// Create a handler for the sendButton and nameField
-		class MyHandler implements ClickHandler, KeyUpHandler {
-			/**
-			 * Fired when the user clicks on the sendButton.
-			 */
-			public void onClick(ClickEvent event) {
-				final int rpcAntwort = 0;
-				sportifyService.getDailyStepsDataOfUser("testuser", new AsyncCallback<List<DailyStepsEntryOfy>>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						dialogBox.setText("RPC - methods");
-						serverResponseLabel
-								.removeStyleName("serverResponseLabelError");
-						serverResponseLabel.setHTML(caught.toString() + " Fehler");
-						dialogBox.center();
-					}
-
-					@Override
-					public void onSuccess(List<DailyStepsEntryOfy> result) {
-						dialogBox.setText("RPC - methods");
-						serverResponseLabel
-								.removeStyleName("serverResponseLabelError");
-						serverResponseLabel.setHTML(result.get(0).getStepsToday() + " Zahl");
-						dialogBox.center();
-					}
-				});
-				
-				
-//				sendNameToServer();
-				
-//				String url = "http://sportify-msports.appspot.com/getDailyStepsData?callback=callback125";
-//				String url = "http://127.0.0.1:8888/getDailyStepsData";
-//				JsonpRequestBuilder builder = new JsonpRequestBuilder();
-//			
-//
-//				
-//				  JsonpRequest<String> request = builder.requestString(url, new AsyncCallback<String>() {
-//				  
-//
-//					@Override
-//					public void onFailure(Throwable caught) {
-//						dialogBox
-//						.setText("Remote Procedure Call - Failure");
-//			
-//				serverResponseLabel.setHTML(caught.toString());
-//				dialogBox.center();
-//				closeButton.setFocus(true);
-//					}
-//
-//					@Override
-//					public void onSuccess(String result) {
-//						dialogBox.setText("HTTP - JSON - Request");
-//						serverResponseLabel
-//								.removeStyleName("serverResponseLabelError");
-//						serverResponseLabel.setHTML(result);
-//						dialogBox.center();
-//					}
-//				  });
-//				
-			}
-
-			/**
-			 * Fired when the user types in the nameField.
-			 */
-			public void onKeyUp(KeyUpEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					sendNameToServer();
-				}
-			}
-
-			/**
-			 * Send the name from the nameField to the server and wait for a response.
-			 */
-			private void sendNameToServer() {
-				// First, we validate the input.
-				errorLabel.setText("");
-				String textToServer = nameField.getText();
-				if (!FieldVerifier.isValidName(textToServer)) {
-					errorLabel.setText("Please enter at least four characters");
-					return;
-				}
-
-				// Then, we send the input to the server.
-				sendButton.setEnabled(false);
-				textToServerLabel.setText(textToServer);
-				serverResponseLabel.setText("");
-				sportifyService.greetServer(textToServer,
-						new AsyncCallback<String>() {
-							public void onFailure(Throwable caught) {
-								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
-								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(SERVER_ERROR);
-								dialogBox.center();
-								closeButton.setFocus(true);
-							}
-
-							public void onSuccess(String result) {
-								dialogBox.setText("Remote Procedure Call");
-								serverResponseLabel
-										.removeStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(result);
-								dialogBox.center();
-								closeButton.setFocus(true);
-							}
-						});
-			}
+		};
+		if (! firstIn) {
+			refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
+			firstIn = true;    	
 		}
-		
-		
 
-		// Add a handler to send the name to the server
-		MyHandler handler = new MyHandler();
-		sendButton.addClickHandler(handler);
-		nameField.addKeyUpHandler(handler);
+
+
+		// Create a callback to be called when the visualization API
+		// has been loaded.
+		Runnable onLoadCallback = new Runnable() {
+			public void run() {
+				Panel panel = RootPanel.get();
+			
+				linChart = new LineChart(createTable(null), createOptions());					
+				linChart.addSelectHandler(createSelectHandler(linChart));
+				panel.add(linChart);	
+			}
+		};
+
+		// Load the visualization api, passing the onLoadCallback to be called
+		// when loading is done.
+		VisualizationUtils.loadVisualizationApi(onLoadCallback, LineChart.PACKAGE);		
+	}
+
+	/**
+	 * Generate random stock prices.
+	 */
+	private void refreshWatchList() {
+		final int rpcAntwort = 0;
+		greetingService.getDailyStepsDataOfUser("testuser", new AsyncCallback<List<DailyStepsEntryOfy>>() {
+
+
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println("Fail");
+			}
+
+
+			@Override
+			public void onSuccess(List<DailyStepsEntryOfy> result) {
+				updateTable(result);
+			}			
+
+		});
+	}
+	
+	private void updateTable(List<DailyStepsEntryOfy> result) {
+		System.out.println(result.size());
+
+		//update linchart
+		if (linChart != null && result != null) {
+			linChart.draw(createTable(result), createOptions());
+		}
+
+		//updateTable
+		int sum = 0;
+		int i = 0;
+		for (DailyStepsEntryOfy res : result) {
+			sum += res.getStepsToday();
+			updateTable(res,i);
+			i++;
+		}		
+
+		lblOverallSteps.setText(""+sum);   
+		lblAverageSteps.setText("" + sum / result.size()); 
+
+		// Display timestamp showing last refresh.
+		lastUpdatedLabel.setText("Last update : "
+				+ DateTimeFormat.getMediumDateTimeFormat().format(new Date()));
+		
+	}	
+
+	private void updateTable(DailyStepsEntryOfy res, int row) {
+		//Set steps into the table
+		stocksFlexTable.setText(row+1, 0, "" + res.getStepsToday());		
+
+		Date date = new Date(res.getDate());	
+		StringBuffer buf = new StringBuffer(date.toString());		
+		buf = new StringBuffer(buf.substring(buf.indexOf(" ")+1));
+		String month = buf.substring(0, buf.indexOf(" "));
+		StringBuffer buf2 = new StringBuffer(buf.substring(buf.indexOf(" ")+1));
+		String day = buf2.substring(0, buf2.indexOf((" ")));
+		String year = buf2.substring(buf2.lastIndexOf(" "));
+		stocksFlexTable.setText(row+1, 1, "" + day + " " + month + " " + year);
+		
+	}
+
+	/**
+	 * Create options for the linechart
+	 * @return the options
+	 */
+	private Options createOptions() {
+		Options options = Options.create();
+		options.setWidth(400);
+		options.setHeight(240);
+		options.setTitle("My Daily Activities");
+		return options;
+	}
+
+
+	private SelectHandler createSelectHandler(final LineChart chart) {
+		return new SelectHandler() {
+			@Override
+			public void onSelect(SelectEvent event) {
+				String message = "";
+
+				// May be multiple selections.
+				JsArray<Selection> selections = chart.getSelections();
+
+				for (int i = 0; i < selections.length(); i++) {
+					// add a new line for each selection
+					message += i == 0 ? "" : "\n";
+
+					Selection selection = selections.get(i);
+
+					if (selection.isCell()) {
+						// isCell() returns true if a cell has been selected.
+
+						// getRow() returns the row number of the selected cell.
+						int row = selection.getRow();
+						// getColumn() returns the column number of the selected cell.
+						int column = selection.getColumn();
+						message += "cell " + row + ":" + column + " selected";
+					} else if (selection.isRow()) {
+						// isRow() returns true if an entire row has been selected.
+
+						// getRow() returns the row number of the selected row.
+						int row = selection.getRow();
+						message += "row " + row + " selected";
+					} else {
+						// unreachable
+						message += "Pie chart selections should be either row selections or cell selections.";
+						message += "  Other visualizations support column selections as well.";
+					}
+				}
+
+				Window.alert(message);
+			}
+		};
+	}
+
+	
+	private AbstractDataTable createTable(List<DailyStepsEntryOfy> result) {
+
+		DataTable data = DataTable.create();
+		data.addColumn(ColumnType.STRING, "");
+		data.addColumn(ColumnType.STRING, "");
+		data.addColumn(ColumnType.NUMBER, "Average Heart Rate");
+		if (result != null) {
+			data.addRows(result.size());
+			
+			int i = 0;
+			for(DailyStepsEntryOfy res : result) {
+				data.setValue(i, 2, res.getStepsToday());
+				data.setValue(i,1,"Test");
+				data.setValue(i,0,""+(i+1));	
+				i++;
+			}				
+		}
+		return data;
 	}
 }
