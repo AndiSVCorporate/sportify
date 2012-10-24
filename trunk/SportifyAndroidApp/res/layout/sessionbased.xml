@@ -178,7 +178,7 @@
 	android:layout_alignParentBottom="true"
 	android:layout_alignParentLeft="true">
 <Button
-	android:id="@+id/widget56"
+	android:id="@+id/startButton"
 	android:text="Start"
 	android:textSize="18sp"
 	android:textStyle="bold"
@@ -186,7 +186,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content" />
 <Button
-	android:id="@+id/widget56"
+	android:id="@+id/stopButton"
 	android:text="Stop"
 	android:textSize="18sp"
 	android:textStyle="bold"
