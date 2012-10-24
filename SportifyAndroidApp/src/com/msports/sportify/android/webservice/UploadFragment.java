@@ -42,39 +42,12 @@ public class UploadFragment extends Fragment implements OnClickListener{
 //			stepsTodayEditText = (EditText)v.findViewById(R.id.editText1);
 			String numberAsString = stepsTodayEditText.getText().toString();
 			
-			int steps = new Integer(numberAsString);
+//			int steps = new Integer(numberAsString);
 			
-			sendStoringRequest(steps);
+//			SportifyWebService.sendSessionStoringRequest();
 			
 		}
 	}
 	
-	public static final String STORE_SESSION_URL = "http://sportify-msports.appspot.com/storeSession";
-	public static final String PARAM_DATA = "data";
 	
-	private void sendStoringRequest(int steps) {
-		RestClient client = new RestClient(STORE_SESSION_URL);
-		Session session = new Session(steps, System.currentTimeMillis(), 10);
-		Gson gson = new Gson();
-			String json = gson.toJson(session);
-			String body = json.toString();
-			Log.i("JSON-Request", body);
-			client.addParam(PARAM_DATA, body);
-		
-
-		// execute request
-		try {
-			client.execute(RequestMethod.GET);
-		} catch (Exception e) {
-			Log.e("Request-Exception:", e.toString());
-		}
-
-		int responseCode = client.getResponseCode();
-		if (responseCode == 200) {
-			// HTTP response is OK
-			String response = client.getResponse();
-			Log.i("Servlet-Response", response);
-			
-		}
-	}
 }

@@ -20,8 +20,8 @@ public class SimulationHeartRateSensor extends Sensor{
 			float random;
 			
 			while(true) {
-				random = (float) (Math.random()*80);
-				heartRate = 100 + (int)random;
+				random = (float) (Math.random()*40);
+				heartRate = 160 + (int)random;
 				listener.onUpdateHeartRateSensorData(new HeartRateData(heartRate));		
 				try {
 					sleep(1000);
