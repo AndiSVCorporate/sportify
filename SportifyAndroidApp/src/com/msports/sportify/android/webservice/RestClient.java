@@ -11,9 +11,6 @@ import android.util.Log;
 /**
  * Simple client for REST services.
  * 
- * @author Luke Lowrey
- * @author Robert Schenkenfelder (edited)
- * 
  */
 public class RestClient extends SportifyHttpClient<String> {
 

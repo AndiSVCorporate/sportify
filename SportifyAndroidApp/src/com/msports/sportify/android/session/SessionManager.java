@@ -131,7 +131,12 @@ public class SessionManager implements HeartRateListener, StepListener {
 
 			// calculate calories
 			float weight = settings.getBodyWeight();
-			float vomax = settings.getVoMax();
+			int par = settings.getPyhsicalActRating();
+			float height = settings.getBodyHeight();
+			
+			float vomax = (0.133f * age) - (0.005f * (float)Math.pow(age, 2)) +
+			(11.403f * gender) + (1.463f * par) +
+			(9.17f * height/100) - (0.254f * weight) + 34.143f;
 
 			float cal = -59.3954f
 					+ gender
@@ -139,7 +144,7 @@ public class SessionManager implements HeartRateListener, StepListener {
 							* vomax + 0.634f * heartrate)
 					+ (1 - gender)
 					* (0.274f * age + 0.103f * weight + 0.38f * vomax + 0.45f * heartrate);
-			cal = cal / 1000; // kcal
+			cal = cal / 4.168f / 60; //converted to kcal/second
 			model.setCalories(model.getCalories() + cal);
 
 			timestampPulse = System.currentTimeMillis();
