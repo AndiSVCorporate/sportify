@@ -5,6 +5,15 @@
 
     <PreferenceCategory
             android:title="@string/steps_settings_title">
+            
+        <ListPreference
+                android:key="par"
+                android:title="PA-R"
+                android:summary="The Physical Activity Rating"
+                android:entries="@array/par_preference"
+                android:entryValues="@array/par_preference_values"
+                android:dialogTitle="PA-R"
+                android:defaultValue="4" />
 
         <com.msports.sportify.preferences.StepLengthPreference
                 android:key="step_length"
@@ -20,6 +29,13 @@
                 android:dialogTitle="@string/body_weight_setting_title"
                 android:defaultValue="50" />
         
+        <com.msports.sportify.preferences.BodyHeightPreference
+                android:key="body_height"
+                android:title="@string/body_height_setting"
+                android:summary="@string/body_height_setting_details"
+                android:dialogTitle="@string/body_height_setting_title"
+                android:defaultValue="170" />
+        
         <com.msports.sportify.preferences.AgePreference
                 android:key="age"
                 android:title="@string/age_setting"
@@ -33,13 +49,6 @@
                 android:summary="@string/gender_setting_details"
                 android:dialogTitle="@string/gender_setting_title"
                 android:defaultValue="1" />
-        
-        <com.msports.sportify.preferences.VolumeOxygenMaxPreference
-                android:key="vomax"
-                android:title="@string/vomax_setting"
-                android:summary="@string/vomax_setting_details"
-                android:dialogTitle="@string/vomax_setting_title"
-                android:defaultValue="50" />
         
         <com.msports.sportify.preferences.RestingHeartRatePreference
                 android:key="hrrest"

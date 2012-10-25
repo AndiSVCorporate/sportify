@@ -54,16 +54,18 @@ public class SessionFragment extends Fragment implements OnClickListener{
 	}
 	
 	public void updateView(final SessionModel model) {
-		getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				m_heartRateView.setText("" + model.getCurrentHeartRate());
-				m_distanceView.setText("" + model.getDistance());
-				m_speedView.setText("" + model.getSpeed());
-				m_kcalView.setText("" + model.getCalories());
-				m_trimpView.setText("" + model.getDuration()/1000);
-			}
-		});		
+		if (getActivity() != null) {
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					m_heartRateView.setText("" + model.getCurrentHeartRate());
+					m_distanceView.setText("" + model.getDistance());
+					m_speedView.setText("" + model.getSpeed());
+					m_kcalView.setText("" + model.getCalories());
+					m_trimpView.setText("" + model.getDuration()/1000);
+				}
+			});		
+		}		
 	}
 
 	@Override

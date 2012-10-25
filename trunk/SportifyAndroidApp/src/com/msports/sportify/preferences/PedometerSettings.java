@@ -30,6 +30,15 @@ public class PedometerSettings {
         }
     }
     
+    public float getBodyHeight() { //in centimeters
+        try {
+            return Float.valueOf(mSettings.getString("body_height", "170").trim());
+        }
+        catch (NumberFormatException e) {
+            return 0f;
+        }
+    }
+    
     public int getRestingHeartRate() { //pulse
         try {
         	return Integer.valueOf(mSettings.getString("hrrest", "50").trim());
@@ -57,12 +66,12 @@ public class PedometerSettings {
         }
 	}
 
-	public float getVoMax() {
+	public int getPyhsicalActRating() {
 		try {
-            return Float.valueOf(mSettings.getString("vomax", "50").trim());
+            return Integer.valueOf(mSettings.getString("par", "4").trim());
         }
         catch (NumberFormatException e) {
-            return 0f;
+            return 0;
         }
 	}
 }

@@ -1,0 +1,16 @@
+<resources>
+    <string-array name="par_preference">
+        <item>run less than 1 mile/week</item>
+        <item>run 1 to 5 miles/week</item>
+        <item>run 5 to 10 miles/week</item>
+        <item>run over 10 miles/week</item>
+    </string-array>
+
+    <string-array name="par_preference_values">
+        <item>4</item>
+        <item>5</item>
+        <item>6</item><!-- 10 * 1.5^(-2) -->
+        <item>7</item><!-- 10 * 1.5^(-1) -->
+    </string-array>
+
+</resources>
