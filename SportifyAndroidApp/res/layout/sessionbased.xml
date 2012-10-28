@@ -4,17 +4,19 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:padding="10dp"
-	xmlns:android="http://schemas.android.com/apk/res/android">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:binding="http://www.gueei.com/android-binding/"
+	>
 
 <TextView
 	android:id="@+id/trimpview"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:text="10"
 	android:textSize="100sp"
 	android:textColor="@color/black"
 	android:layout_centerHorizontal="true"
-	android:layout_alignParentTop="true" />
+	android:layout_alignParentTop="true" 
+	binding:text="duration"/>
 
 <TextView
 	android:id="@+id/widget34"
@@ -36,7 +38,7 @@
 	android:id="@+id/heartrateview"
 	android:layout_width="70dp"
 	android:layout_height="30dp"
-	android:text="65"
+	binding:text="currentHeartRate"
 	android:textSize="20sp"
 	android:typeface="sans"
 	android:textStyle="bold"
@@ -80,7 +82,7 @@
 	android:id="@+id/speedview"
 	android:layout_width="70dp"
 	android:layout_height="30dp"
-	android:text="0"
+	binding:text="speed"
 	android:textSize="20sp"
 	android:typeface="sans"
 	android:textStyle="bold"
@@ -109,7 +111,7 @@
 	android:id="@+id/distanceview"
 	android:layout_width="70dp"
 	android:layout_height="30dp"
-	android:text="0"
+	binding:text="distance"
 	android:textSize="20sp"
 	android:typeface="sans"
 	android:textStyle="bold"
@@ -146,7 +148,7 @@
 	android:id="@+id/kcalview"
 	android:layout_width="70dp"
 	android:layout_height="30dp"
-	android:text="0"
+	binding:text="calories"
 	android:textSize="20sp"
 	android:typeface="sans"
 	android:textStyle="bold"

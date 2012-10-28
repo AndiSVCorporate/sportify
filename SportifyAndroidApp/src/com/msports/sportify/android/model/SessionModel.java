@@ -1,157 +1,101 @@
 package com.msports.sportify.android.model;
 
+import gueei.binding.Command;
+import gueei.binding.Observable;
+
 import java.util.Vector;
 
+
+
+import android.view.View;
+
 import com.msports.sportify.android.sensors.heartRate.HeartRateData;
+import com.msports.sportify.android.session.SessionManager;
 
 public class SessionModel {
 
-	private long startTime;
-	private long duration;
+	public Observable<Long> startTime;
+	public Observable<Long> duration;
 	
-	private int temperature;
-	private int condition;
+	public Observable<Integer> temperature;
+	public Observable<Integer> condition;
 	
-	private int avgHeartRate;
-	private int maxHeartRate;
-	private int currentPercentageOfMaxHeartRate;
-	private int currentHeartRate;
-	private Vector<HeartRateData> heartRateTrace;
+	public Observable<Integer> avgHeartRate;
+	public Observable<Integer> maxHeartRate;
+	public Observable<Integer> currentPercentageOfMaxHeartRate;
+	public Observable<Integer> currentHeartRate;
+	public Vector<HeartRateData> heartRateTrace;
 	
-	private float distance; 
-	private float speed;
+	public Observable<Float> distance; 
+	public Observable<Float> speed;
 	
-	private float calories;
+	public Observable<Float> calories;
 	
-	private float trimpScore;
+	public Observable<Float> trimpScore;
+	
+	public Command startSession, stopSession;
+	
+	public SessionManager sessionManager;
 
-	public SessionModel() {
+	public SessionModel(SessionManager sessionManager) {
+		startTime = new Observable<Long>(Long.class, 0l);
+		duration = new Observable<Long>(Long.class, 0l);
+		temperature = new Observable<Integer>(Integer.class, Integer.MIN_VALUE);
+		condition = new Observable<Integer>(Integer.class, -1);
+		avgHeartRate = new Observable<Integer>(Integer.class, 0);
+		maxHeartRate = new Observable<Integer>(Integer.class, 0);
+		currentPercentageOfMaxHeartRate = new Observable<Integer>(Integer.class, 0);
+		currentHeartRate = new Observable<Integer>(Integer.class, -1);
+		distance = new Observable<Float>(Float.class, 0f);
+		speed = new Observable<Float>(Float.class, 0f);
+		calories = new Observable<Float>(Float.class, 0f);
+		trimpScore = new Observable<Float>(Float.class, 0f);
+		heartRateTrace = new Vector<HeartRateData>();
 		
+		this.sessionManager = sessionManager;
+		
+		initCommands();
 		resetValues();
 	}
 	
+	public void initCommands() {
+		startSession = new Command() {
+			
+			@Override
+			public void Invoke(View arg0, Object... arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+	}
+	
+	private static SessionModel instance;
+	
+	public static SessionModel getInstance(SessionManager manager) {
+		if(instance == null) {
+			instance = new SessionModel(manager);
+		}
+		return instance;
+	}
+	
 	public void resetValues() {
-		startTime = -1;
-		duration = 0;
-		temperature = -1;
-		condition = -1;
-		avgHeartRate = -1;
-		maxHeartRate = -1;
-		currentHeartRate = -1;
-		currentPercentageOfMaxHeartRate = -1;
-		trimpScore = 0;
-		calories = 0;
-		distance = -1;
-		speed = -1;
+		startTime.set(0l);
+		duration.set(0l);
+		temperature.set(-1);
+		condition.set(-1);
+		avgHeartRate.set(-1);
+		maxHeartRate.set(-1);
+		currentHeartRate.set(-1);
+		currentPercentageOfMaxHeartRate.set(-1);
+		trimpScore.set(0f);
+		calories.set(0f);
+		distance.set(0f);
+		speed.set(0f);
 		if(heartRateTrace != null) {
 			heartRateTrace.clear();			
 		}
 	}
 	
-	public int getAvgHeartRate() {
-		return avgHeartRate;
-	}
-
-	public void setAvgHeartRate(int avgHeartRate) {
-		this.avgHeartRate = avgHeartRate;
-	}
-
-	public int getMaxHeartRate() {
-		return maxHeartRate;
-	}
-
-	public void setMaxHeartRate(int maxHeartRate) {
-		this.maxHeartRate = maxHeartRate;
-	}
-
-	public int getCurrentPercentageOfMaxHeartRate() {
-		return currentPercentageOfMaxHeartRate;
-	}
-
-	public void setCurrentPercentageOfMaxHeartRate(
-			int currentPercentageOfMaxHeartRate) {
-		this.currentPercentageOfMaxHeartRate = currentPercentageOfMaxHeartRate;
-	}
-
-	public int getCurrentHeartRate() {
-		return currentHeartRate;
-	}
-
-	public void setCurrentHeartRate(int currentHeartRate) {
-		this.currentHeartRate = currentHeartRate;
-	}
-
-	public float getTrimpScore() {
-		return trimpScore;
-	}
-
-	public void setTrimpScore(float trimpScore) {
-		this.trimpScore = trimpScore;
-	}
-
-	public float getDistance() {
-		return distance;
-	}
-
-	public void setDistance(float distance) {
-		this.distance = distance;
-	}
-
-	public float getSpeed() {
-		return speed;
-	}
-
-	public void setSpeed(float speed) {
-		this.speed = speed;
-	}
-	
-	public float getCalories() {
-		return calories;
-	}
-
-	public void setCalories(float calories) {
-		this.calories = calories;
-	}
-
-	public long getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(long startTime) {
-		this.startTime = startTime;
-	}
-
-	public long getDuration() {
-		return duration;
-	}
-
-	public void setDuration(long duration) {
-		this.duration = duration;
-	}
-
-	public int getTemperature() {
-		return temperature;
-	}
-
-	public void setTemperature(int temperature) {
-		this.temperature = temperature;
-	}
-
-	public int getCondition() {
-		return condition;
-	}
-
-	public void setCondition(int condition) {
-		this.condition = condition;
-	}
-
-	public Vector<HeartRateData> getHeartRateTrace() {
-		return heartRateTrace;
-	}
-
-	public void setHeartRateTrace(Vector<HeartRateData> heartRateTrace) {
-		this.heartRateTrace = heartRateTrace;
-	}
 	
 	
 }

@@ -33,10 +33,10 @@ public class SessionManager implements HeartRateListener, StepListener {
 
 	public SessionManager(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
-		model = new SessionModel();
+		model = SessionModel.getInstance(this);
 		SensorFactoryManager sensorFactoryManager = SensorFactoryManager
 				.getInstance(mainActivity);
-		sensorFactoryManager.registerSimulationHeartRateListener(this);
+		sensorFactoryManager.registerAntHeartRateListener(this);
 		sensorFactoryManager.registerStepListener(this);
 
 		sumHeartRate = 0;
@@ -50,7 +50,7 @@ public class SessionManager implements HeartRateListener, StepListener {
 
 	public void startSession() {
 		model.resetValues();
-		model.setStartTime(System.currentTimeMillis());
+		model.startTime.set(System.currentTimeMillis());
 		sessionRunning = true;
 		timeHandler = new Handler();
 		timeHandler.postDelayed(new Runnable() {
@@ -58,8 +58,8 @@ public class SessionManager implements HeartRateListener, StepListener {
 			@Override
 			public void run() {
 				if (sessionRunning) {
-					model.setDuration(System.currentTimeMillis()
-							- model.getStartTime());
+					model.duration.set(System.currentTimeMillis()
+							- model.startTime.get());
 					SessionManager.this.mainActivity.updateViews(model);
 					if (timeHandler != null) {
 						timeHandler.postDelayed(this, 1000);
@@ -72,62 +72,71 @@ public class SessionManager implements HeartRateListener, StepListener {
 	public void stopSession() {
 		sessionRunning = false;
 		timeHandler = null;
-		model.setDuration(System.currentTimeMillis() - model.getStartTime());
+		model.duration.set(System.currentTimeMillis() - model.startTime.get());
 		SportifyWebService.sendSessionStoringRequest(model);
 		model.resetValues();
 		mainActivity.updateViews(model);
 	}
 
 	@Override
-	synchronized public void onUpdateHeartRateSensorData(HeartRateData data) {
-		int heartrate = data.getHeartRate();
+	synchronized public void onUpdateHeartRateSensorData(
+			final HeartRateData data) {
 
-		model.setCurrentHeartRate(heartrate);
+		mainActivity.runOnUiThread(new Runnable() {
 
-		if (sessionRunning) {
+			@Override
+			public void run() {
+				int heartrate = data.getHeartRate();
+				Log.i("HR:", "hr: " + heartrate);
+				data.setRuntime(System.currentTimeMillis() - model.startTime.get());
+				model.heartRateTrace.add(data);
+				model.currentHeartRate.set(heartrate);
+				if (sessionRunning) {
 
-			if (heartrate > model.getMaxHeartRate()) {
-				model.setMaxHeartRate(heartrate);
-			}
+					if (heartrate > model.maxHeartRate.get()) {
+						model.maxHeartRate.set(heartrate);
+					}
 
-			int percent = (heartrate / model.getMaxHeartRate()) * 100;
+					int percent = (heartrate / model.maxHeartRate.get()) * 100;
 
-			model.setCurrentPercentageOfMaxHeartRate(percent);
+					model.currentPercentageOfMaxHeartRate.set(percent);
 
-			sumHeartRate += heartrate;
-			countHeartRate++;
+					sumHeartRate += heartrate;
+					countHeartRate++;
 
-			model.setAvgHeartRate(sumHeartRate / countHeartRate);
+					model.avgHeartRate.set(sumHeartRate / countHeartRate);
 
-			PedometerSettings settings = new PedometerSettings(mainActivity);
+					PedometerSettings settings = new PedometerSettings(
+							mainActivity);
 
-			int gender = settings.getGender();
-			int age = settings.getAge();
-			float hrmax = 208 - (0.7f * age);
+					int gender = settings.getGender();
+					int age = settings.getAge();
+					float hrmax = 208 - (0.7f * age);
 
-			// calculate trimp
-			if (timestampPulse != -1) {
-				float diff = System.currentTimeMillis() - timestampPulse;
-				diff = diff / 1000f / 60f; // minutes
+					// calculate trimp
+					if (timestampPulse != -1) {
+						float diff = System.currentTimeMillis()
+								- timestampPulse;
+						diff = diff / 1000f / 60f; // minutes
 
-				int hrrest = settings.getRestingHeartRate();
+						int hrrest = settings.getRestingHeartRate();
 
-				float trimp = model.getTrimpScore();
+						float trimp = model.trimpScore.get();
 
-				float hrReserve = (model.getCurrentHeartRate() - hrrest)
-						/ (hrmax - hrrest);
-				float y = hrReserve;
+						float hrReserve = (model.currentHeartRate.get() - hrrest)
+								/ (hrmax - hrrest);
+						float y = hrReserve;
 
-				if (gender == 0) {
-					y *= 1.67f;
-				} else {
-					y *= 1.92f;
-				}
+						if (gender == 0) {
+							y *= 1.67f;
+						} else {
+							y *= 1.92f;
+						}
 
-				trimp += diff * hrReserve * 0.64f * Math.pow(Math.E, y);
-				int rounding = (int) (trimp * 100);
-				model.setTrimpScore(((float) rounding) / 100f);
-			}
+						trimp += diff * hrReserve * 0.64f * Math.pow(Math.E, y);
+						int rounding = (int) (trimp * 100);
+						model.trimpScore.set(((float) rounding) / 100f);
+					}
 
 			// calculate calories
 			float weight = settings.getBodyWeight();
@@ -145,18 +154,21 @@ public class SessionManager implements HeartRateListener, StepListener {
 					+ (1 - gender)
 					* (0.274f * age + 0.103f * weight + 0.38f * vomax + 0.45f * heartrate);
 			cal = cal / 4.168f / 60; //converted to kcal/second
-			model.setCalories(model.getCalories() + cal);
+			model.calories.set(model.calories.get() + cal);
 
-			timestampPulse = System.currentTimeMillis();
-		}
+					timestampPulse = System.currentTimeMillis();
+				}
 
-		mainActivity.updateViews(model);
+			}
+		});
 	}
+
+	
 
 	@Override
 	public void onUpdateStepSensor(StepData _data) {
-		model.setSpeed(_data.getM_speed());
-		model.setDistance(_data.getM_distance());
+		model.speed.set(_data.getM_speed());
+		model.distance.set(_data.getM_distance());
 		mainActivity.updateViews(model);
 	}
 }

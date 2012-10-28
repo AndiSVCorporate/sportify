@@ -9,6 +9,10 @@ public class HeartRateData {
 		this.heartRate = heartRate;
 	}
 
+	public HeartRateData() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getHeartRate() {
 		return heartRate;
 	}
