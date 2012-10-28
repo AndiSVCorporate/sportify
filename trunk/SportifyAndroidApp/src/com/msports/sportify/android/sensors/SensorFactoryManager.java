@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import android.content.Context;
 
+import com.msports.sportify.android.sensors.heartRate.AntHeartRateSensor;
 import com.msports.sportify.android.sensors.heartRate.HeartRateData;
 import com.msports.sportify.android.sensors.heartRate.HeartRateListener;
 import com.msports.sportify.android.sensors.heartRate.SimulationHeartRateSensor;
@@ -17,6 +18,7 @@ public class SensorFactoryManager implements StepListener, HeartRateListener{
 	
 	private StepSensor stepSensor;
 	private SimulationHeartRateSensor simulationHeartRateSensor;
+	private AntHeartRateSensor antHeartRateSensor;
 	
 	private Vector<StepListener> stepListeners;
 	private Vector<HeartRateListener> heartRateListeners;
@@ -47,6 +49,14 @@ public class SensorFactoryManager implements StepListener, HeartRateListener{
 		if(simulationHeartRateSensor == null) {
 			simulationHeartRateSensor = new SimulationHeartRateSensor(this);
 			simulationHeartRateSensor.connect();
+		}
+		heartRateListeners.add(heartRateListener);
+	}
+	
+	public void registerAntHeartRateListener(HeartRateListener heartRateListener) {
+		if(antHeartRateSensor == null) {
+			antHeartRateSensor = new AntHeartRateSensor(context, this);
+			antHeartRateSensor.connect();
 		}
 		heartRateListeners.add(heartRateListener);
 	}

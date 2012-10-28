@@ -14,14 +14,15 @@ public class SportifyWebService {
 	public static void sendSessionStoringRequest(SessionModel model) {
 		RestClient client = new RestClient(STORE_SESSION_URL);
 		Session session = new Session();
-		session.setStartTime(model.getStartTime());
-		session.setDuration(model.getDuration());
-		session.setAvgHeartRate(model.getAvgHeartRate());
-		session.setCalories((int) model.getCalories());
-		session.setDistance((int) model.getDistance());
-		session.setMaxHeartRate(model.getMaxHeartRate());
-		session.setTemperature(model.getTemperature());
-		session.setTrimpScore((int) model.getTrimpScore());
+		session.setStartTime(model.startTime.get());
+		session.setDuration(model.duration.get());
+		session.setAvgHeartRate(model.avgHeartRate.get());
+		session.setCalories((int) model.calories.get().intValue());
+		session.setDistance((int) model.distance.get().intValue());
+		session.setMaxHeartRate(model.maxHeartRate.get());
+		session.setTemperature(model.temperature.get());
+		session.setTrimpScore((int) model.trimpScore.get().intValue());
+		session.setHeartRateTrace(WSUtils.encodeHeartRateTraceToString(model.heartRateTrace));
 
 		Gson gson = new Gson();
 		String json = gson.toJson(session);
@@ -44,7 +45,7 @@ public class SportifyWebService {
 
 		} else {
 			String response = client.getResponse();
-			Log.i("Servlet-Response", response);
+			Log.i("Servlet-Response", responseCode + " " + response);
 		}
 	}
 }

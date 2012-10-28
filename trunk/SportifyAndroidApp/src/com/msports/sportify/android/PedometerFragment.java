@@ -1,15 +1,7 @@
 package com.msports.sportify.android;
 
-import java.util.Date;
-
-import android.content.SharedPreferences;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +14,6 @@ import com.msports.sportify.android.sensors.speed.SpeedSensor;
 import com.msports.sportify.android.sensors.steps.StepData;
 import com.msports.sportify.android.sensors.steps.StepListener;
 import com.msports.sportify.android.sensors.steps.StepSensor;
-import com.msports.sportify.preferences.PedometerSettings;
 
 public class PedometerFragment extends Fragment implements StepListener {
 

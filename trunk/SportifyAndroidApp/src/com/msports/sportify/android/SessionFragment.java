@@ -1,5 +1,7 @@
 package com.msports.sportify.android;
 
+import gueei.binding.Binder;
+
 import com.msports.sportify.android.model.SessionModel;
 import com.msports.sportify.android.session.SessionManager;
 
@@ -16,7 +18,7 @@ import android.widget.TextView;
 
 public class SessionFragment extends Fragment implements OnClickListener{
 
-	private View v;
+	private View root;
 	
 	private TextView m_trimpView;
 	private TextView m_speedView;
@@ -28,44 +30,45 @@ public class SessionFragment extends Fragment implements OnClickListener{
 	private Button stopButton;
 	
 	private SessionManager manager;
+
 	
 	public SessionFragment(MainActivity activity) {
-		manager = new SessionManager(activity);
+		
 	}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.sessionbased, null);
+//		View view = inflater.inflate(R.layout.sessionbased, null);
+//		Binder.init();
+		manager = new SessionManager((MainActivity)getActivity());
+		root = Binder.bindView(this.getActivity(), Binder.inflateView(this.getActivity(), R.layout.sessionbased, container,
+				false), SessionModel.getInstance(manager));
 		
-		v = view;	
-		
-		m_trimpView = (TextView)view.findViewById(R.id.trimpview);
-		m_speedView = (TextView)view.findViewById(R.id.speedview);
-		m_distanceView = (TextView)view.findViewById(R.id.distanceview);
-		m_heartRateView = (TextView)view.findViewById(R.id.heartrateview);
-		m_kcalView = (TextView)view.findViewById(R.id.kcalview);
-		startButton = (Button)view.findViewById(R.id.startButton);
+//		m_trimpView = (TextView)view.findViewById(R.id.trimpview);
+//		m_speedView = (TextView)view.findViewById(R.id.speedview);
+//		m_distanceView = (TextView)view.findViewById(R.id.distanceview);
+//		m_heartRateView = (TextView)view.findViewById(R.id.heartrateview);
+//		m_kcalView = (TextView)view.findViewById(R.id.kcalview);
+		startButton = (Button)root.findViewById(R.id.startButton);
 		startButton.setOnClickListener(this);
-		stopButton = (Button)view.findViewById(R.id.stopButton);
+		stopButton = (Button)root.findViewById(R.id.stopButton);
 		stopButton.setOnClickListener(this);
 
-		return view;
+		return root;
 	}
 	
 	public void updateView(final SessionModel model) {
-		if (getActivity() != null) {
-			getActivity().runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					m_heartRateView.setText("" + model.getCurrentHeartRate());
-					m_distanceView.setText("" + model.getDistance());
-					m_speedView.setText("" + model.getSpeed());
-					m_kcalView.setText("" + model.getCalories());
-					m_trimpView.setText("" + model.getDuration()/1000);
-				}
-			});		
-		}		
+//		getActivity().runOnUiThread(new Runnable() {
+//			@Override
+//			public void run() {
+//				m_heartRateView.setText("" + model.getCurrentHeartRate());
+//				m_distanceView.setText("" + model.getDistance());
+//				m_speedView.setText("" + model.getSpeed());
+//				m_kcalView.setText("" + model.getCalories());
+//				m_trimpView.setText("" + model.getDuration()/1000);
+//			}
+//		});		
 	}
 
 	@Override
