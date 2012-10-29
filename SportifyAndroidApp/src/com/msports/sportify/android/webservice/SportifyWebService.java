@@ -1,5 +1,10 @@
 package com.msports.sportify.android.webservice;
 
+import java.io.UnsupportedEncodingException;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.StringEntity;
+
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -11,7 +16,7 @@ public class SportifyWebService {
 	public static final String STORE_SESSION_URL = "http://sportify-msports.appspot.com/storeSession";
 	public static final String PARAM_DATA = "data";
 
-	public static void sendSessionStoringRequest(SessionModel model) {
+	public static void sendSessionStoringRequest(SessionModel model){
 		RestClient client = new RestClient(STORE_SESSION_URL);
 		Session session = new Session();
 		session.setStartTime(model.startTime.get());
@@ -28,11 +33,14 @@ public class SportifyWebService {
 		String json = gson.toJson(session);
 		String body = json.toString();
 		Log.i("JSON-Request", body);
-		client.addParam(PARAM_DATA, body);
-
-		// execute request
+//		client.addParam(PARAM_DATA, body);
+		
+		// set body and execute request
 		try {
-			client.execute(RequestMethod.GET);
+			StringEntity bodyEntity = new StringEntity(body, "UTF-8");
+			bodyEntity.setContentEncoding("UTF-8");	
+			client.setEntity(bodyEntity);
+			client.execute(RequestMethod.POST);
 		} catch (Exception e) {
 			Log.e("Request-Exception:", e.toString());
 		}

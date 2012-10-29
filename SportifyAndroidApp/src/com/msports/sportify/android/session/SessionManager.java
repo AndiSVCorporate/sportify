@@ -87,8 +87,9 @@ public class SessionManager implements HeartRateListener, StepListener {
 			@Override
 			public void run() {
 				int heartrate = data.getHeartRate();
-				Log.i("HR:", "hr: " + heartrate);
 				data.setRuntime(System.currentTimeMillis() - model.startTime.get());
+				Log.i("HR:", "hr: " + heartrate + ", Runtime: " + data.getRuntime());
+				
 				model.heartRateTrace.add(data);
 				model.currentHeartRate.set(heartrate);
 				if (sessionRunning) {

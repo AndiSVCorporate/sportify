@@ -148,7 +148,7 @@ public abstract class SportifyHttpClient<T> {
 
 	protected void executeRequest(HttpUriRequest request, String url) {
 		HttpClient client = new DefaultHttpClient(httpParameters);
-
+		
 		HttpResponse httpResponse;
 		try {
 			httpResponse = client.execute(request);
