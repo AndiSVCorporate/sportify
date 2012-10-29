@@ -28,7 +28,7 @@ import com.msports.sportify.shared.DailyStepsEntryOfy;
 
 public class SessionPage implements EntryPoint {
 	
-	private DockPanel mainPanel = new DockPanel();
+	private VerticalPanel mainPanel = new VerticalPanel();
 	private final Label lblAverageSteps = new Label("asdfasdf");
 	private Anchor pedometer = new Anchor("Pedometer");
 	private Anchor sessions = new Anchor("Sessions");
@@ -118,7 +118,7 @@ public class SessionPage implements EntryPoint {
 			RootPanel rootPanel = RootPanel.get("startpage");		
 		 	rootPanel.add(mainPanel);			
 			
-			mainPanel.add(verticalPanel, DockPanel.WEST);
+			mainPanel.add(verticalPanel);
 			verticalPanel.add(pedometer);
 			pedometer.setHref("http://127.0.0.1:8888/Sportify.html?gwt.codesvr=127.0.0.1:9997");
 			verticalPanel.add(sessions);
