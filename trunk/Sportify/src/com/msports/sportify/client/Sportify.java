@@ -6,9 +6,11 @@ import java.util.List;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -31,13 +33,7 @@ import com.msports.sportify.shared.DailyStepsEntryOfy;
 
 public class Sportify implements EntryPoint {
 
-	/**
-	 * The message displayed to the user when the server cannot be reached or
-	 * returns an error.
-	 */
-	private static final String SERVER_ERROR = "An error occurred while "
-			+ "attempting to contact the server. Please check your network "
-			+ "connection and try again.";
+
 
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting service.
@@ -65,83 +61,100 @@ public class Sportify implements EntryPoint {
 	/* (non-Javadoc)
 	 * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
 	 */
-	public void onModuleLoad() {	    
-		// Create table for stock data.	
-		stocksFlexTable.setText(0, 0, "Id");
-		stocksFlexTable.setText(0, 1, "Steps");
-		stocksFlexTable.setText(0, 2, "Day");
-		stocksFlexTable.setText(0, 3, "Steps to Go");
-		stocksFlexTable.setText(0, 4, "AverageHeartRate");
+	public void onModuleLoad() {		
 
-		// Add styles to elements in the stock list table.
-		stocksFlexTable.setCellPadding(6);
-		stocksFlexTable.getRowFormatter().addStyleName(0, "watchListHeader");
-		stocksFlexTable.addStyleName("watchList");
-		stocksFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
-		stocksFlexTable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
-		stocksFlexTable.getCellFormatter().addStyleName(0, 3, "watchListNumericColumn");   
-		stocksFlexTable.getCellFormatter().addStyleName(0, 4, "watchListNumericColumn"); 
-		mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		System.out.println("Load fein");
 
-		// Assemble Main panel.
-		mainPanel.add(stocksFlexTable);
-		mainPanel.setCellVerticalAlignment(stocksFlexTable, HasVerticalAlignment.ALIGN_MIDDLE);
-		mainPanel.setCellHorizontalAlignment(stocksFlexTable, HasHorizontalAlignment.ALIGN_CENTER);
-		stocksFlexTable.setWidth("400px");
-
-		mainPanel.add(verticalPanel);
-		verticalPanel.add(horizontalPanel);
-		horizontalPanel.add(lblNewLabel);
-		lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-		lblOverallSteps.setStyleName("watchListGroundData");
-		horizontalPanel.add(lblOverallSteps);
-
-		verticalPanel.add(horizontalPanel_1);
-		horizontalPanel_1.add(lblAverageStepsPer);
-		lblAverageSteps.setStyleName("watchListGroundData");
-		horizontalPanel_1.add(lblAverageSteps);
-		mainPanel.add(lastUpdatedLabel);
-
-		// Associate the Main panel with the HTML host page.
 		RootPanel rootPanel = RootPanel.get("stockList");
-		rootPanel.add(mainPanel);
+		if((rootPanel != null))		  
+		{ 
+			System.out.println("panel stocklist existiert");
+			// Associate the Main panel with the HTML host page.
 
-		// Setup timer to refresh list automatically.
-		refreshWatchList();
-		Timer refreshTimer = new Timer() {
-			@Override
-			public void run() {
-				refreshWatchList();
+			rootPanel.add(mainPanel);
+
+
+
+
+			// Create table for stock data.	
+			stocksFlexTable.setText(0, 0, "Id");
+			stocksFlexTable.setText(0, 1, "Steps");
+			stocksFlexTable.setText(0, 2, "Day");
+			stocksFlexTable.setText(0, 3, "Steps to Go");
+			stocksFlexTable.setText(0, 4, "AverageHeartRate");
+
+			// Add styles to elements in the stock list table.
+			stocksFlexTable.setCellPadding(6);
+			stocksFlexTable.getRowFormatter().addStyleName(0, "watchListHeader");
+			stocksFlexTable.addStyleName("watchList");
+			stocksFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
+			stocksFlexTable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
+			stocksFlexTable.getCellFormatter().addStyleName(0, 3, "watchListNumericColumn");   
+			stocksFlexTable.getCellFormatter().addStyleName(0, 4, "watchListNumericColumn"); 
+			mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+
+			// Assemble Main panel.
+			mainPanel.add(stocksFlexTable);
+			mainPanel.setCellVerticalAlignment(stocksFlexTable, HasVerticalAlignment.ALIGN_MIDDLE);
+			mainPanel.setCellHorizontalAlignment(stocksFlexTable, HasHorizontalAlignment.ALIGN_CENTER);
+			stocksFlexTable.setWidth("400px");
+
+			mainPanel.add(verticalPanel);
+			verticalPanel.add(horizontalPanel);
+			horizontalPanel.add(lblNewLabel);
+			lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+			lblOverallSteps.setStyleName("watchListGroundData");
+			horizontalPanel.add(lblOverallSteps);
+
+			verticalPanel.add(horizontalPanel_1);
+			horizontalPanel_1.add(lblAverageStepsPer);
+			lblAverageSteps.setStyleName("watchListGroundData");
+			horizontalPanel_1.add(lblAverageSteps);
+			mainPanel.add(lastUpdatedLabel);
+
+
+
+
+
+			//Window.open(YOUR_URL_TO_OTHER_GWT_PAGE, "_self", ""); 
+			// Setup timer to refresh list automatically.
+			refreshWatchList();
+			Timer refreshTimer = new Timer() {
+				@Override
+				public void run() {
+					refreshWatchList();
+				}
+			};
+			if (! firstIn) {
+				refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
+				firstIn = true;    	
 			}
-		};
-		if (! firstIn) {
-			refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
-			firstIn = true;    	
+
+
+
+			// Create a callback to be called when the visualization API
+			// has been loaded.
+			Runnable onLoadCallback = new Runnable() {
+				public void run() {
+					Panel panel = RootPanel.get();
+
+					linChart = new LineChart(createTable(null), createOptions());					
+					linChart.addSelectHandler(createSelectHandler(linChart));
+					panel.add(linChart);	
+				}
+			};
+
+			// Load the visualization api, passing the onLoadCallback to be called
+			// when loading is done.
+			VisualizationUtils.loadVisualizationApi(onLoadCallback, LineChart.PACKAGE);		
 		}
-
-
-
-		// Create a callback to be called when the visualization API
-		// has been loaded.
-		Runnable onLoadCallback = new Runnable() {
-			public void run() {
-				Panel panel = RootPanel.get();
-			
-				linChart = new LineChart(createTable(null), createOptions());					
-				linChart.addSelectHandler(createSelectHandler(linChart));
-				panel.add(linChart);	
-			}
-		};
-
-		// Load the visualization api, passing the onLoadCallback to be called
-		// when loading is done.
-		VisualizationUtils.loadVisualizationApi(onLoadCallback, LineChart.PACKAGE);		
 	}
 
 	/**
 	 * Generate random stock prices.
 	 */
 	private void refreshWatchList() {
+		//Window.Location.assign(GWT.getHostPageBaseURL() + "SessionPage.html");
 		final int rpcAntwort = 0;
 		greetingService.getDailyStepsDataOfUser("testuser", new AsyncCallback<List<DailyStepsEntryOfy>>() {
 
@@ -159,7 +172,7 @@ public class Sportify implements EntryPoint {
 
 		});
 	}
-	
+
 	private void updateTable(List<DailyStepsEntryOfy> result) {
 		System.out.println(result.size());
 
@@ -183,12 +196,12 @@ public class Sportify implements EntryPoint {
 		// Display timestamp showing last refresh.
 		lastUpdatedLabel.setText("Last update : "
 				+ DateTimeFormat.getMediumDateTimeFormat().format(new Date()));
-		
+
 	}	
 
 	private void updateTable(DailyStepsEntryOfy res, int row) {
 		//Set steps into the table
-		stocksFlexTable.setText(row+1, 0, "" + res.getStepsToday());		
+		stocksFlexTable.setText(row+1, 1, "" + res.getStepsToday());		
 
 		Date date = new Date(res.getDate());	
 		StringBuffer buf = new StringBuffer(date.toString());		
@@ -197,8 +210,8 @@ public class Sportify implements EntryPoint {
 		StringBuffer buf2 = new StringBuffer(buf.substring(buf.indexOf(" ")+1));
 		String day = buf2.substring(0, buf2.indexOf((" ")));
 		String year = buf2.substring(buf2.lastIndexOf(" "));
-		stocksFlexTable.setText(row+1, 1, "" + day + " " + month + " " + year);
-		
+		stocksFlexTable.setText(row+1, 2, "" + day + " " + month + " " + year);
+
 	}
 
 	/**
@@ -255,7 +268,7 @@ public class Sportify implements EntryPoint {
 		};
 	}
 
-	
+
 	private AbstractDataTable createTable(List<DailyStepsEntryOfy> result) {
 
 		DataTable data = DataTable.create();
@@ -263,7 +276,7 @@ public class Sportify implements EntryPoint {
 		data.addColumn(ColumnType.NUMBER, "Steps per day");
 		if (result != null) {
 			data.addRows(result.size());
-			
+
 			int i = 0;
 			for(DailyStepsEntryOfy res : result) {
 				data.setValue(i, 1, res.getStepsToday());
