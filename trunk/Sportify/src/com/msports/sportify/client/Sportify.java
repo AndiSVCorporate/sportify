@@ -73,9 +73,6 @@ public class Sportify implements EntryPoint {
 
 			rootPanel.add(mainPanel);
 
-
-
-
 			// Create table for stock data.	
 			stocksFlexTable.setText(0, 0, "Id");
 			stocksFlexTable.setText(0, 1, "Steps");
