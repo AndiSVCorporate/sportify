@@ -1,12 +1,15 @@
 package com.msports.sportify.shared;
 
+import java.io.Serializable;
+
 import javax.jdo.annotations.Index;
 import javax.persistence.Id;
 
 import com.googlecode.objectify.annotation.Entity;
 
+@SuppressWarnings("serial")
 @Entity
-public class Session {
+public class Session implements Serializable{
 	
 	@Id
 	private Long id;
