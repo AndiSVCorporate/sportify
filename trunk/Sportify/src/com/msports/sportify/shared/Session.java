@@ -132,6 +132,10 @@ public class Session implements Serializable{
 	public void setUser(String user) {
 		this.user = user;
 	}
+	
+	public long getId() {
+		return id;
+	}
 
 
 }
