@@ -27,7 +27,11 @@ public class OfyUtil {
 	}
 	
 	public static List<Session> getSessionsOfUser(String user) {
-		Query<Session> query = ofy().query(Session.class).filter("user", user).order("starttime");
+		Query<Session> query = ofy().query(Session.class).filter("user", user).order("startTime");
 		return query.list();
 	}
+	
+//	public static Session getSessionWithId(long id) {
+////		Query<Session query> = ofy().query(arg0)
+//	}
 }
