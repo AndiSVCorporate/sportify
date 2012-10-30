@@ -109,10 +109,6 @@ public class Sportify implements EntryPoint {
 			horizontalPanel_1.add(lblAverageSteps);
 			mainPanel.add(lastUpdatedLabel);
 
-
-
-
-
 			//Window.open(YOUR_URL_TO_OTHER_GWT_PAGE, "_self", ""); 
 			// Setup timer to refresh list automatically.
 			refreshWatchList();
