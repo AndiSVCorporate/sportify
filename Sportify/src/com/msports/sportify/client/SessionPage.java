@@ -9,6 +9,7 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.layout.client.Layout;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -43,7 +44,9 @@ import com.msports.sportify.shared.Session;
 public class SessionPage implements EntryPoint {
 
 	private VerticalPanel mainPanel = new VerticalPanel();
-	private final Label lblAverageSteps = new Label("asdfasdf");
+	private Label lblDistanceOverall= new Label("asdf");
+	private Label lblCalorieOverall= new Label("asdf");
+	private Label lblDurationOverall= new Label("asdf");
 	private Anchor pedometer = new Anchor("Pedometer");
 	private Anchor sessions = new Anchor("Sessions");
 	private final VerticalPanel verticalPanel = new VerticalPanel();
@@ -60,21 +63,20 @@ public class SessionPage implements EntryPoint {
 	private Label lastUpdatedLabel = new Label();	
 	private boolean firstIn = false;	
 
-	private final HorizontalPanel horizontalPanel = new HorizontalPanel();
-
-	private final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
+	private final HorizontalPanel horizontalPanel = new HorizontalPanel();	
 	private LineChart linChart; 
 
 	@Override
-	public void onModuleLoad() {	
-
-
+	public void onModuleLoad() {
+		
+		//Check if sessionpage exists
 		if((RootPanel.get("sessionpage") != null))		  
 		{ 			
-			RootPanel rootPanel = RootPanel.get("sessionpage");		
-			rootPanel.add(mainPanel);
-			System.out.println("panel stocklist existiert");
+			RootPanel rootPanel = RootPanel.get("sessionpage");			
 
+			System.out.println("panel stocklist existiert");
+			mainPanel.setStyleName("center");
+			
 			// Create table for stock data.	
 			stocksFlexTable.setText(0, 0, "Id");
 			stocksFlexTable.setText(0, 1, "Date");
@@ -90,61 +92,65 @@ public class SessionPage implements EntryPoint {
 			stocksFlexTable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
 			stocksFlexTable.getCellFormatter().addStyleName(0, 3, "watchListNumericColumn");			
 			stocksFlexTable.getCellFormatter().addStyleName(0, 4, "watchListRemoveColumn");
-			mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
 			// Assemble Main panel.
-			mainPanel.add(stocksFlexTable);
-			mainPanel.setCellVerticalAlignment(stocksFlexTable, HasVerticalAlignment.ALIGN_MIDDLE);
-			mainPanel.setCellHorizontalAlignment(stocksFlexTable, HasHorizontalAlignment.ALIGN_CENTER);
+			mainPanel.add(stocksFlexTable);			
 			stocksFlexTable.setWidth("400px");
 
-			mainPanel.add(verticalPanel);
-			verticalPanel.add(horizontalPanel);				
-		
-			mainPanel.add(lastUpdatedLabel);
+			
+			mainPanel.add(lblDistanceOverall);
+			mainPanel.add(lblDurationOverall);
+			
+			//verticalPanel.setStyleName("center");
 
-			refreshSession();
+			mainPanel.add(lastUpdatedLabel);
+			mainPanel.add(lblCalorieOverall);
+
+			rootPanel.add(mainPanel);		
+			
+			// Create a callback to be called when the visualization API
+			// has been loaded.
+			Runnable onLoadCallback = new Runnable() {
+				public void run() {
+					Panel panel = RootPanel.get("sessionpage");
+
+					linChart = new LineChart(createTable(null), createOptions());								
+					linChart.addSelectHandler(createSelectHandler(linChart));
+					linChart.setStyleName("center");					
+					refreshSession();
+					panel.add(linChart);	
+				}
+			};
+
+			// Load the visualization api, passing the onLoadCallback to be called
+			// when loading is done.
+			VisualizationUtils.loadVisualizationApi(onLoadCallback, LineChart.PACKAGE);		 
+			//refreshSession();
 			Timer refreshTimer = new Timer() {
 				@Override
 				public void run() {
 					refreshSession();
 				}
 			};
+			
 			if (! firstIn) {
 				refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
 				firstIn = true;    	
 			}
 
+		} else if (RootPanel.get("startpage") != null) {			
+			RootPanel rootPanel = RootPanel.get("startpage");			
 
-
-						// Create a callback to be called when the visualization API
-						// has been loaded.
-						Runnable onLoadCallback = new Runnable() {
-							public void run() {
-								Panel panel = RootPanel.get();
-			
-								linChart = new LineChart(createTable(null), createOptions());								
-								linChart.addSelectHandler(createSelectHandler(linChart));
-								panel.add(linChart);	
-							}
-						};
-
-			// Load the visualization api, passing the onLoadCallback to be called
-			// when loading is done.
-			VisualizationUtils.loadVisualizationApi(onLoadCallback, LineChart.PACKAGE);		 	
-
-		} else if (RootPanel.get("startpage") != null) {
-			mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-			RootPanel rootPanel = RootPanel.get("startpage");		
-			rootPanel.add(mainPanel);	
-			
 			mainPanel.add(verticalPanel);
-			verticalPanel.add(pedometer);	
-			verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-			pedometer.setHref("http://" + Window.Location.getHost() + "/Sportify.html?gwt.codesvr=127.0.0.1:9997");
-			pedometer.setStyleName("watchListNumericColumn");
-			verticalPanel.add(sessions);
-			sessions.setHref("http://" + Window.Location.getHost() + "/SessionPage.html?gwt.codesvr=127.0.0.1:9997");
+			verticalPanel.add(pedometer);						
+			pedometer.setHref("http://" + Window.Location.getHost() + "/Sportify.html");			
+			verticalPanel.add(sessions);			
+			sessions.setHref("http://" + Window.Location.getHost() + "/SessionPage.html");
+
+			verticalPanel.setStyleName("center");
+
+			mainPanel.setStyleName("center");
+			rootPanel.add(mainPanel);				
 			System.out.println("start page");
 		} else {
 			System.out.println("Nix existiert");
@@ -156,9 +162,7 @@ public class SessionPage implements EntryPoint {
 	/**
 	 * Generate random stock prices.
 	 */
-	private void refreshSession() {
-		//Window.Location.assign(GWT.getHostPageBaseURL() + "SessionPage.html");
-		final int rpcAntwort = 0;
+	private void refreshSession() {		
 		greetingService.getSessionsOfUser("testuser", new AsyncCallback<List<Session>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -184,12 +188,22 @@ public class SessionPage implements EntryPoint {
 			linChart.draw(createTable(result), createOptions());
 		}
 
-		//updateTable		
+		//updateTable	
+		float duration = 0;
+		float distance = 0;
+		float calorie = 0;
 		int i = 0;
 		for (Session res : result) {			
 			updateTable(res,i);
+			duration += res.getDuration();
+			distance += res.getDistance();
+			calorie += res.getCalories();			
 			i++;
 		}		
+		
+		lblDistanceOverall.setText("Distance overall: " + distance + "\nAverage Distance: " + distance/i);
+		lblDurationOverall.setText("Duration overall: " + distance + "\nAverage Duration: " + duration/i);
+		lblCalorieOverall.setText("Calories overall: " + distance + "\nAverage Calories: " + calorie/i);
 
 
 		// Display timestamp showing last refresh.
@@ -213,22 +227,22 @@ public class SessionPage implements EntryPoint {
 		stocksFlexTable.setText(row+1, 2, "" + res.getTrimpScore());
 		stocksFlexTable.setText(row+1, 3, "" + res.getAvgHeartRate());
 		stocksFlexTable.setText(row+1, 4, "" + res.getDistance());
-		
+
 		Button sessionDetail = new Button("->");		
 		sessionDetail.setTitle("" + res.getId());
 		System.out.println(sessionDetail.getHTML());
-		
+
 		sessionDetail.addClickHandler(new ClickHandler() {
-		      public void onClick(ClickEvent event) {		      
-		        Button b =  (Button)event.getSource(); 
-		        System.out.println(b.getTitle());
-		        Window.Location.assign(GWT.getHostPageBaseURL() + "SessionDetail.html?id=" + b.getTitle());
-		      }
-		    });
-	    sessionDetail.addStyleDependentName("remove");	    
-	    stocksFlexTable.setWidget(row+1, 4, sessionDetail);
+			public void onClick(ClickEvent event) {		      
+				Button b =  (Button)event.getSource(); 
+				System.out.println(b.getTitle());
+				Window.Location.assign(GWT.getHostPageBaseURL() + "SessionDetail.html?id=" + b.getTitle());
+			}
+		});
+		sessionDetail.addStyleDependentName("remove");	    
+		stocksFlexTable.setWidget(row+1, 4, sessionDetail);
 	}		
-	
+
 
 	/**
 	 * Create options for the linechart
@@ -242,7 +256,7 @@ public class SessionPage implements EntryPoint {
 		options.setSmoothLine(true);		
 		return options;
 	}
-	
+
 
 	/**
 	 * Inserts the data for the session
@@ -254,7 +268,7 @@ public class SessionPage implements EntryPoint {
 		data.addColumn(ColumnType.STRING, "");		
 		data.addColumn(ColumnType.NUMBER, "Trimp");
 		data.addColumn(ColumnType.NUMBER, "Distance");
-		
+
 		if (session != null) {
 			data.addRows(session.size());
 
@@ -269,7 +283,7 @@ public class SessionPage implements EntryPoint {
 		}
 		return data;
 	}
-	
+
 	private SelectHandler createSelectHandler(final LineChart chart) {
 		return new SelectHandler() {
 			@Override
