@@ -70,7 +70,7 @@ public class Sportify implements EntryPoint {
 		{ 
 			System.out.println("panel stocklist existiert");
 			// Associate the Main panel with the HTML host page.
-
+			mainPanel.setStyleName("center");
 			rootPanel.add(mainPanel);
 
 			// Create table for stock data.	
@@ -96,6 +96,7 @@ public class Sportify implements EntryPoint {
 			mainPanel.setCellHorizontalAlignment(stocksFlexTable, HasHorizontalAlignment.ALIGN_CENTER);
 			stocksFlexTable.setWidth("400px");
 
+			verticalPanel.setStyleName("center");					
 			mainPanel.add(verticalPanel);
 			verticalPanel.add(horizontalPanel);
 			horizontalPanel.add(lblNewLabel);
@@ -133,6 +134,7 @@ public class Sportify implements EntryPoint {
 
 					linChart = new LineChart(createTable(null), createOptions());					
 					linChart.addSelectHandler(createSelectHandler(linChart));
+					linChart.setStyleName("center");
 					panel.add(linChart);	
 				}
 			};
