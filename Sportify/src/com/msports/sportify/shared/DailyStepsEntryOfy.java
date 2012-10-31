@@ -1,7 +1,6 @@
 package com.msports.sportify.shared;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.jdo.annotations.Index;
 import javax.persistence.Id;
@@ -23,9 +22,7 @@ public class DailyStepsEntryOfy implements Serializable{
 	private long date;
 	private String user;
 
-	public DailyStepsEntryOfy() {
-		
-	}
+	public DailyStepsEntryOfy() {	}
 	
 	public DailyStepsEntryOfy(int stepsToday, long date) {
 		this.stepsToday = stepsToday;
