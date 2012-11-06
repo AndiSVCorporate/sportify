@@ -2,9 +2,12 @@ package com.msports.sportify.shared;
 
 import static com.msports.sportify.server.OfyService.ofy;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.googlecode.objectify.Query;
+import com.msports.sportify.server.WSUtils;
 
 public class OfyUtil {
 	
@@ -31,7 +34,10 @@ public class OfyUtil {
 		return query.list();
 	}
 	
-//	public static Session getSessionWithId(long id) {
-////		Query<Session query> = ofy().query(arg0)
-//	}
+	public static Session getSessionWithId(long id) throws UnsupportedEncodingException, IOException {
+		Query<Session> query = ofy().query(Session.class).filter("id", id);
+		Session session = query.get();
+		session.setHeartRateTraceVector(WSUtils.decodeStringToHeartRateTrace(session.getHeartRateTrace()));
+		return session;
+	}
 }

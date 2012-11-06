@@ -1,5 +1,7 @@
 package com.msports.sportify.server;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +73,16 @@ SportifyService {
 	public List<Session> getSessionsOfUser(String user)
 			throws IllegalArgumentException {
 		return OfyUtil.getSessionsOfUser(user);
+	}
+
+	@Override
+	public Session getSessionWithId(long id) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		try {
+			return OfyUtil.getSessionWithId(id);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 }
