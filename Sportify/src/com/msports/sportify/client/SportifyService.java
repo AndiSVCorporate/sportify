@@ -17,4 +17,5 @@ public interface SportifyService extends RemoteService {
 	int getInteger(int i) throws IllegalArgumentException;
 	List<DailyStepsEntryOfy> getDailyStepsDataOfUser(String user) throws IllegalArgumentException;
 	List<Session> getSessionsOfUser(String user) throws IllegalArgumentException;
+	Session getSessionWithId(long id) throws IllegalArgumentException;
 }

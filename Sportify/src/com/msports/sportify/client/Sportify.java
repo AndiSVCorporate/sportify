@@ -110,6 +110,10 @@ public class Sportify implements EntryPoint {
 			horizontalPanel_1.add(lblAverageSteps);
 			mainPanel.add(lastUpdatedLabel);
 
+
+
+
+
 			//Window.open(YOUR_URL_TO_OTHER_GWT_PAGE, "_self", ""); 
 			// Setup timer to refresh list automatically.
 			refreshWatchList();
@@ -218,6 +222,7 @@ public class Sportify implements EntryPoint {
 		options.setWidth(400);
 		options.setHeight(240);
 		options.setTitle("My Daily Activities");
+		options.setSmoothLine(true);
 		return options;
 	}
 

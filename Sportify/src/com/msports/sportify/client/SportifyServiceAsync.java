@@ -17,4 +17,5 @@ public interface SportifyServiceAsync {
 	void getInteger(int i, AsyncCallback<Integer> callback) throws IllegalArgumentException;
 	void getDailyStepsDataOfUser(String user, AsyncCallback<List<DailyStepsEntryOfy>> callback) throws IllegalArgumentException;
 	void getSessionsOfUser(String user, AsyncCallback<List<Session>> callback) throws IllegalArgumentException;
+	void getSessionWithId(long id, AsyncCallback<Session> callback);
 }

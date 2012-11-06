@@ -1,11 +1,14 @@
 package com.msports.sportify.shared;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Vector;
 
 import javax.jdo.annotations.Index;
 import javax.persistence.Id;
 
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.NotSaved;
 
 @SuppressWarnings("serial")
 @Entity
@@ -31,6 +34,9 @@ public class Session implements Serializable{
 	
 	private int distance;
 	
+	@NotSaved
+	private List<HeartRateData> heartRateTraceVector;
+	
 	public Session() {
 		this.startTime = System.currentTimeMillis();
 		this.duration = 0;
@@ -42,8 +48,17 @@ public class Session implements Serializable{
 		this.trimpScore = -1;
 		this.calories = -1;
 		this.user = "testuser";
+		heartRateTraceVector = null;
 	}	
 	
+	public List<HeartRateData> getHeartRateTraceVector() {
+		return heartRateTraceVector;
+	}
+
+	public void setHeartRateTraceVector(List<HeartRateData> heartRateTraceVector) {
+		this.heartRateTraceVector = heartRateTraceVector;
+	}
+
 	public int getTemperature() {
 		return temperature;
 	}
