@@ -102,9 +102,9 @@ public class SessionPage implements EntryPoint {
 			mainPanel.add(lblDurationOverall);
 			
 			//verticalPanel.setStyleName("center");
-
-			mainPanel.add(lastUpdatedLabel);
+			
 			mainPanel.add(lblCalorieOverall);
+			mainPanel.add(lastUpdatedLabel);
 
 			rootPanel.add(mainPanel);		
 			
@@ -236,7 +236,7 @@ public class SessionPage implements EntryPoint {
 			public void onClick(ClickEvent event) {		      
 				Button b =  (Button)event.getSource(); 
 				System.out.println(b.getTitle());
-				Window.Location.assign(GWT.getHostPageBaseURL() + "SessionDetail.html?id=" + b.getTitle());
+				Window.Location.assign(Window.Location.getHost() + "SessionDetail.html?id=" + b.getTitle());
 			}
 		});
 		sessionDetail.addStyleDependentName("remove");	    

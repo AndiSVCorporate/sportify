@@ -71,7 +71,7 @@ public class Sportify implements EntryPoint {
 			System.out.println("panel stocklist existiert");
 			// Associate the Main panel with the HTML host page.
 			mainPanel.setStyleName("center");
-			rootPanel.add(mainPanel);
+			
 
 			// Create table for stock data.	
 			stocksFlexTable.setText(0, 0, "Id");
@@ -100,7 +100,7 @@ public class Sportify implements EntryPoint {
 			mainPanel.add(verticalPanel);
 			verticalPanel.add(horizontalPanel);
 			horizontalPanel.add(lblNewLabel);
-			lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+			//lblNewLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 			lblOverallSteps.setStyleName("watchListGroundData");
 			horizontalPanel.add(lblOverallSteps);
 
@@ -111,7 +111,7 @@ public class Sportify implements EntryPoint {
 			mainPanel.add(lastUpdatedLabel);
 
 
-
+			rootPanel.add(mainPanel);
 
 
 			//Window.open(YOUR_URL_TO_OTHER_GWT_PAGE, "_self", ""); 

@@ -53,70 +53,66 @@ public class SessionDetail implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		System.out.println("Load fein");
+		
 
 		RootPanel rootPanel = RootPanel.get("sessiondetail");
-		
-		Label lbl_startTime = new Label("Start Time: ");
-		lbl_startTime.setStyleName("watchListGroundData");
-		rootPanel.add(lbl_startTime, 29, 10);
-		
-		Label lblNewLabel_2 = new Label("...");
-		lblNewLabel_2.setStyleName("watchList");
-		rootPanel.add(lblNewLabel_2, 140, 10);
-		if((rootPanel != null))		  
-		{ 
-			System.out.println("panel sessiondetail existiert");
-			// Associate the Main panel with the HTML host page.
+
+		if (rootPanel != null) {
+			Label lbl_startTime = new Label("Start Time: ");
+			lbl_startTime.setStyleName("watchListGroundData");
+			rootPanel.add(lbl_startTime);
+
+			Label lblNewLabel_2 = new Label("...");
+			lblNewLabel_2.setStyleName("watchList");
+			rootPanel.add(lblNewLabel_2);
+			System.out.println("SessonDetail geladen");
 
 			rootPanel.add(mainPanel);
-			
+
 			// Create a callback to be called when the visualization API
-						// has been loaded.
-						Runnable onLoadCallback = new Runnable() {
-							public void run() {
-								
-								
-								long id = new Long(Window.Location.getParameter("id"));
-								sportifyService.getSessionWithId(id, new AsyncCallback<Session>() {
-									
-									@Override
-									public void onSuccess(Session result) {
-										Panel panel = RootPanel.get();
-										
-										List<HeartRateData> hrTrace;
-										try {
-											hrTrace = result.getHeartRateTraceVector();
-											System.out.println(hrTrace.size() + " Elemente");
-											linChart = new LineChart(createTable(hrTrace), createOptions());					
-											linChart.addSelectHandler(createSelectHandler(linChart));
-											
-											panel.add(linChart);	
-										} catch (Exception e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}										
-										
-									}
-									
-									@Override
-									public void onFailure(Throwable caught) {
-										System.out.println("fail: " + caught.getMessage());
-									}
-								});
-								
-								
-							}
-						};
+			// has been loaded.
+			Runnable onLoadCallback = new Runnable() {
+				public void run() {
 
-						// Load the visualization api, passing the onLoadCallback to be called
-						// when loading is done.
-						VisualizationUtils.loadVisualizationApi(onLoadCallback, LineChart.PACKAGE);	
+					//long id = new Long(Window.Location.getParameter("id"));
+					//int index = idString.indexOf("g");
+					long id = 14;
+					sportifyService.getSessionWithId(id, new AsyncCallback<Session>() {
+
+						@Override
+						public void onSuccess(Session result) {
+							Panel panel = RootPanel.get();
+
+							List<HeartRateData> hrTrace;
+							try {
+								hrTrace = result.getHeartRateTraceVector();
+								System.out.println(hrTrace.size() + " Elemente");
+								
+								linChart = new LineChart(createTable(hrTrace), createOptions());					
+								linChart.addSelectHandler(createSelectHandler(linChart));
+								panel.add(linChart);	
+								
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}										
+
+						}
+
+						@Override
+						public void onFailure(Throwable caught) {
+							System.out.println("fail: " + caught.getMessage());
+						}
+					});
+				}
+			};
+
+			// Load the visualization api, passing the onLoadCallback to be called
+			// when loading is done.
+			VisualizationUtils.loadVisualizationApi(onLoadCallback, LineChart.PACKAGE);			
 		}
-			
-
 	}	
-	
+
 
 	/**
 	 * Create options for the linechart
@@ -146,13 +142,13 @@ public class SessionDetail implements EntryPoint {
 			for (HeartRateData hr : hrTrace) {
 				data.setValue(i,0, "" +hr.getRuntime());
 				data.setValue(i, 1, hr.getHeartRate());
-//				data.setValue(i, 0, "" + (i + 1));
+				//				data.setValue(i, 0, "" + (i + 1));
 				i++;
 			}
 		}
 		return data;
 	}
-	
+
 	private SelectHandler createSelectHandler(final LineChart chart) {
 		return new SelectHandler() {
 			@Override
