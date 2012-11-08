@@ -19,6 +19,9 @@
 	<!-- Other module inherits                                      -->
 	<inherits name="com.google.gwt.http.HTTP" />
 	<inherits name="com.googlecode.objectify.Objectify" />
+	 <inherits name='com.google.gwt.maps.Maps' />
+	
+	 <script src="http://maps.google.com/maps/api/js?sensor=false" />
 
 	<!-- Specify the app entry point class.                         -->
 	<entry-point class='com.msports.sportify.client.SessionPage' />
