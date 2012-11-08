@@ -77,23 +77,21 @@ public class Sportify implements EntryPoint {
 			stocksFlexTable.setText(0, 0, "Id");
 			stocksFlexTable.setText(0, 1, "Steps");
 			stocksFlexTable.setText(0, 2, "Day");
-			stocksFlexTable.setText(0, 3, "Steps to Go");
-			stocksFlexTable.setText(0, 4, "AverageHeartRate");
+			stocksFlexTable.setText(0, 3, "Steps to Go");	
 
 			// Add styles to elements in the stock list table.
 			stocksFlexTable.setCellPadding(6);
 			stocksFlexTable.getRowFormatter().addStyleName(0, "watchListHeader");
 			stocksFlexTable.addStyleName("watchList");
 			stocksFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
-			stocksFlexTable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
-			stocksFlexTable.getCellFormatter().addStyleName(0, 3, "watchListNumericColumn");   
-			stocksFlexTable.getCellFormatter().addStyleName(0, 4, "watchListNumericColumn"); 
-			mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+			stocksFlexTable.getCellFormatter().addStyleName(0, 2, "watchListDateColumn");
+			stocksFlexTable.getCellFormatter().addStyleName(0, 3, "watchListNumericColumn");   			
+			//mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 
 			// Assemble Main panel.
 			mainPanel.add(stocksFlexTable);
-			mainPanel.setCellVerticalAlignment(stocksFlexTable, HasVerticalAlignment.ALIGN_MIDDLE);
-			mainPanel.setCellHorizontalAlignment(stocksFlexTable, HasHorizontalAlignment.ALIGN_CENTER);
+			//mainPanel.setCellVerticalAlignment(stocksFlexTable, HasVerticalAlignment.ALIGN_MIDDLE);
+			//mainPanel.setCellHorizontalAlignment(stocksFlexTable, HasHorizontalAlignment.ALIGN_CENTER);
 			stocksFlexTable.setWidth("400px");
 
 			verticalPanel.setStyleName("center");					
@@ -200,6 +198,8 @@ public class Sportify implements EntryPoint {
 
 	private void updateTable(DailyStepsEntryOfy res, int row) {
 		//Set steps into the table
+		
+		stocksFlexTable.setText(row+1, 0, "" + row);	
 		stocksFlexTable.setText(row+1, 1, "" + res.getStepsToday());		
 
 		Date date = new Date(res.getDate());	
@@ -210,6 +210,7 @@ public class Sportify implements EntryPoint {
 		String day = buf2.substring(0, buf2.indexOf((" ")));
 		String year = buf2.substring(buf2.lastIndexOf(" "));
 		stocksFlexTable.setText(row+1, 2, "" + day + " " + month + " " + year);
+		stocksFlexTable.setText(row+1, 3, "" + (7000 - res.getStepsToday()));
 
 	}
 

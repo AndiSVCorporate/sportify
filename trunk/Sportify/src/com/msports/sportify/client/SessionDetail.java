@@ -2,12 +2,15 @@ package com.msports.sportify.client;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.MapOptions;
 import com.google.gwt.maps.client.MapTypeId;
 import com.google.gwt.maps.client.MapWidget;
@@ -16,6 +19,7 @@ import com.google.gwt.maps.client.base.LatLng;
 import com.google.gwt.maps.client.overlay.Polyline;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -57,29 +61,62 @@ public class SessionDetail implements EntryPoint {
 	private final Label lblAverageSteps = new Label("");
 	private final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
 	private LineChart linChart;
+	private FlexTable stocksFlexTable = new FlexTable();
 
 	private Label lbl_startTime_value;
 	private MapWidget mapWidget;
 
 	@Override
-	public void onModuleLoad() {
+	public void onModuleLoad() {		
+		
 		System.out.println("Load fein");
 
-		RootPanel rootPanel = RootPanel.get("sessiondetail");
-
-		Label lbl_startTime = new Label("Start Time: ");
-		lbl_startTime.setStyleName("watchListGroundData");
-		rootPanel.add(lbl_startTime, 29, 10);
-
-		lbl_startTime_value = new Label("...");
-		lbl_startTime_value.setStyleName("watchList");
-		rootPanel.add(lbl_startTime_value, 140, 10);
+		RootPanel rootPanel = RootPanel.get("sessiondetail");		
 
 		if ((rootPanel != null)) {
 			System.out.println("panel sessiondetail existiert");
 			// Associate the Main panel with the HTML host page.
+			mainPanel.setStyleName("center");
+			Label lbl_startTime = new Label("Start Time: ");
+			lbl_startTime.setStyleName("watchListGroundData");
+			rootPanel.add(lbl_startTime);
+
+			lbl_startTime_value = new Label("...");
+			lbl_startTime_value.setStyleName("watchList");
+			rootPanel.add(lbl_startTime_value);
 
 			rootPanel.add(mainPanel);
+			
+			// Create table for stock data.	
+			stocksFlexTable.setText(0, 0, "Id");
+			stocksFlexTable.setText(0, 1, "User");
+			stocksFlexTable.setText(0, 2, "Start time");
+			stocksFlexTable.setText(0, 3, "Duration");	
+			stocksFlexTable.setText(0, 4, "Temperature");
+			stocksFlexTable.setText(0, 5, "AVG heartrate");
+			stocksFlexTable.setText(0, 6, "Max heartrate");	
+			stocksFlexTable.setText(0, 7, "Trimp score");
+			stocksFlexTable.setText(0, 8, "Calories");
+			stocksFlexTable.setText(0, 9, "distance");	
+
+			// Add styles to elements in the stock list table.
+			stocksFlexTable.setCellPadding(9);
+			stocksFlexTable.getRowFormatter().addStyleName(0, "watchListHeader");
+			stocksFlexTable.addStyleName("watchList");
+			stocksFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
+			stocksFlexTable.getCellFormatter().addStyleName(0, 2, "watchListDateColumn");
+			stocksFlexTable.getCellFormatter().addStyleName(0, 3, "watchListNumericColumn");   
+			stocksFlexTable.getCellFormatter().addStyleName(0, 4, "watchListNumericColumn");  
+			stocksFlexTable.getCellFormatter().addStyleName(0, 5, "watchListNumericColumn");  
+			stocksFlexTable.getCellFormatter().addStyleName(0, 6, "watchListNumericColumn");  
+			stocksFlexTable.getCellFormatter().addStyleName(0, 7, "watchListNumericColumn");  
+			stocksFlexTable.getCellFormatter().addStyleName(0, 8, "watchListNumericColumn");  
+			stocksFlexTable.getCellFormatter().addStyleName(0, 9, "watchListNumericColumn");  
+			//mainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+
+			// Assemble Main panel.
+			mainPanel.add(stocksFlexTable);
+			stocksFlexTable.setWidth("800px");
 
 			final MapOptions options = new MapOptions();
 			// Zoom level. Required
@@ -123,15 +160,22 @@ public class SessionDetail implements EntryPoint {
 								@Override
 								public void onSuccess(Session result) {
 									Panel panel = RootPanel.get();
+							
+							if (result == null) {
+								System.out.println("Result null");
+							}
+							
+							Session dummys = new Session();
+							updateTable(dummys);
 
 									List<HeartRateData> hrTrace;
 									try {
-										lbl_startTime_value.setText("" + result.getStartTime());
+										//lbl_startTime_value.setText("" + result.getStartTime());
 										
-										hrTrace = result
+										hrTrace = dummys
 												.getHeartRateTraceVector();
-										System.out.println(hrTrace.size()
-												+ " Elemente");
+										//System.out.println(hrTrace.size()
+												//+ " Elemente");
 										linChart = new LineChart(
 												createTable(hrTrace),
 												createOptions());
@@ -163,6 +207,20 @@ public class SessionDetail implements EntryPoint {
 		}
 
 	}
+	
+	private void updateTable(Session res) {
+		//Set steps into the table 
+		stocksFlexTable.setText(1, 0, "" + res.getId());
+		stocksFlexTable.setText(1, 1, res.getUser());
+		stocksFlexTable.setText(1, 2, "" + res.getStartTime());
+		stocksFlexTable.setText(1, 3, "" + res.getDuration());
+		stocksFlexTable.setText(1, 4, "" + res.getTemperature());
+		stocksFlexTable.setText(1, 5, "" + res.getAvgHeartRate());
+		stocksFlexTable.setText(1, 6, "" + res.getMaxHeartRate());
+		stocksFlexTable.setText(1, 7, "" + res.getTrimpScore());
+		stocksFlexTable.setText(1, 8, "" + res.getCalories());
+		stocksFlexTable.setText(1, 9, "" + res.getDistance());	
+	}		
 
 	/**
 	 * Create options for the linechart

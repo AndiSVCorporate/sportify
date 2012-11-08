@@ -102,6 +102,7 @@ public class SessionPage implements EntryPoint {
 			mainPanel.add(lblDurationOverall);
 			
 			//verticalPanel.setStyleName("center");
+
 			
 			mainPanel.add(lblCalorieOverall);
 			mainPanel.add(lastUpdatedLabel);
@@ -141,15 +142,19 @@ public class SessionPage implements EntryPoint {
 		} else if (RootPanel.get("startpage") != null) {			
 			RootPanel rootPanel = RootPanel.get("startpage");			
 
+			mainPanel.setStyleName("center");
+			
 			mainPanel.add(verticalPanel);
 			verticalPanel.add(pedometer);						
-			pedometer.setHref("http://" + Window.Location.getHost() + "/Sportify.html");			
+			pedometer.setHref("http://" + Window.Location.getHost() + "/Sportify.html");
+			pedometer.setStyleName("center");
 			verticalPanel.add(sessions);			
 			sessions.setHref("http://" + Window.Location.getHost() + "/SessionPage.html");
+			sessions.setStyleName("center");
 
-			verticalPanel.setStyleName("center");
+			//verticalPanel.setStyleName("center");
 
-			mainPanel.setStyleName("center");
+			
 			rootPanel.add(mainPanel);				
 			System.out.println("start page");
 		} else {
@@ -236,7 +241,7 @@ public class SessionPage implements EntryPoint {
 			public void onClick(ClickEvent event) {		      
 				Button b =  (Button)event.getSource(); 
 				System.out.println(b.getTitle());
-				Window.Location.assign(Window.Location.getHost() + "SessionDetail.html?id=" + b.getTitle());
+				Window.Location.assign(GWT.getHostPageBaseURL() + "SessionDetail.html?id=" + b.getTitle());
 			}
 		});
 		sessionDetail.addStyleDependentName("remove");	    
